@@ -1,17 +1,16 @@
-import { Pie } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import type { Chart } from "chart.js";
+import { Pie, PieChart, ResponsiveContainer, Cell, Legend, Tooltip } from "recharts";
+import {
+    ChartContainer,
+    ChartTooltip,
+    ChartTooltipContent,
+} from "@/components/ui/chart";
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./artist-distribution-columns";
 import { useStore } from "@/store";
-import { useRef } from "react";
-import { getElementAtEvent } from "react-chartjs-2";
 import { useAtom } from "jotai";
 import { activeTabAtom } from "@/atoms";
-import { legendSpacingPlugin } from "@/lib/chart-plugins";
 import { ExportButton } from "../ExportButton";
-
-ChartJS.register(ArcElement, Tooltip, Legend, legendSpacingPlugin);
+import { useRef } from 'react';
 
 interface Props {
   artists: { name: string; count: number }[];
@@ -20,57 +19,43 @@ interface Props {
 export const ArtistDistribution = ({ artists }: Props) => {
   const { setFilter, filter } = useStore();
   const [, setActiveTab] = useAtom(activeTabAtom);
-  const chartRef = useRef<Chart<'pie', number[], string>>(null);
   const exportRef = useRef<HTMLDivElement>(null);
 
-  const data = {
-    labels: artists.map((a) => a.name),
-    datasets: [
-      {
-        label: "# of Songs",
-        data: artists.map((a) => a.count),
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
-        ],
-        borderColor: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)",
-        ],
-        borderWidth: 1,
-      },
-    ],
-  };
+  const chartData = artists.map(a => ({ name: a.name, value: a.count }));
+  const chartColors = [
+    'hsl(var(--chart-1))',
+    'hsl(var(--chart-2))',
+    'hsl(var(--chart-3))',
+    'hsl(var(--chart-4))',
+    'hsl(var(--chart-5))',
+  ];
 
-  const onClick = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
-    if (!chartRef.current) return;
-    const element = getElementAtEvent(chartRef.current, event);
-    if (element.length > 0) {
-      const { index } = element[0];
-      const artist = artists[index].name;
-      if (filter.type === 'artist' && filter.value === artist) {
-        setFilter({ type: null, value: null });
-      } else {
-        setFilter({ type: 'artist', value: artist });
-        setActiveTab('most-played-tracks');
-      }
+  const handleClick = (data: any) => {
+    const artist = data.name;
+    if (filter.type === 'artist' && filter.value === artist) {
+      setFilter({ type: null, value: null });
+    } else {
+      setFilter({ type: 'artist', value: artist });
+      setActiveTab('most-played-tracks');
     }
   };
 
   return (
     <div>
       <div ref={exportRef}>
-        <div className="w-full max-w-2xl h-auto mx-auto">
-          <Pie data={data} options={{ responsive: true, maintainAspectRatio: true }} onClick={onClick} ref={chartRef} />
-        </div>
+        <ChartContainer config={{}} className="min-h-[200px] w-full">
+            <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                    <Tooltip content={<ChartTooltipContent />} />
+                    <Legend />
+                    <Pie data={chartData} dataKey="value" nameKey="name" onClick={handleClick}>
+                        {chartData.map((_, index) => (
+                            <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
+                        ))}
+                    </Pie>
+                </PieChart>
+            </ResponsiveContainer>
+        </ChartContainer>
         <div className="mt-4">
           <DataTable columns={columns} data={artists} />
         </div>
