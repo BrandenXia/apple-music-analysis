@@ -2,6 +2,11 @@ import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./genre-distribution-columns";
+import { useStore } from "@/store";
+import { useRef } from "react";
+import { getElementAtEvent } from "react-chartjs-2";
+import { useAtom } from "jotai";
+import { activeTabAtom } from "@/atoms";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -10,6 +15,10 @@ interface Props {
 }
 
 export const GenreDistribution = ({ genres }: Props) => {
+  const { setFilter, filter } = useStore();
+  const [, setActiveTab] = useAtom(activeTabAtom);
+  const chartRef = useRef();
+
   const data = {
     labels: genres.map((g) => g.name),
     datasets: [
@@ -37,10 +46,24 @@ export const GenreDistribution = ({ genres }: Props) => {
     ],
   };
 
+  const onClick = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    const element = getElementAtEvent(chartRef.current!, event);
+    if (element.length > 0) {
+      const { index } = element[0];
+      const genre = genres[index].name;
+      if (filter.type === 'genre' && filter.value === genre) {
+        setFilter({ type: null, value: null });
+      } else {
+        setFilter({ type: 'genre', value: genre });
+        setActiveTab('most-played-tracks');
+      }
+    }
+  };
+
   return (
     <div>
       <div className="w-full max-w-2xl h-auto mx-auto">
-        <Pie data={data} options={{ responsive: true, maintainAspectRatio: true }} />
+        <Pie data={data} options={{ responsive: true, maintainAspectRatio: true }} onClick={onClick} ref={chartRef} />
       </div>
       <div className="mt-4">
         <DataTable columns={columns} data={genres} />

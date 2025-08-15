@@ -2,7 +2,7 @@
 import { Track, Analysis, TopTrack, TopArtist, TopAlbum, TopGenre } from "../types";
 import { formatDuration, intervalToDuration } from "date-fns";
 
-export const analyze = (tracks: Track[], startDate?: string, endDate?: string, sortBy: "playCount" | "playTime" = "playCount", genreKey: "Grouping" | "Genre" = "Grouping", count: number = 5): Analysis => {
+export const analyze = (tracks: Track[], startDate?: string, endDate?: string, sortBy: "playCount" | "playTime" = "playCount", genreKey: "Grouping" | "Genre" = "Grouping", count: number = 5, filter: { type: 'genre' | 'artist' | null; value: string | null } = { type: null, value: null }): Analysis => {
   let filteredTracks = tracks;
   if (startDate && endDate) {
     filteredTracks = tracks.filter(track => {
@@ -11,15 +11,29 @@ export const analyze = (tracks: Track[], startDate?: string, endDate?: string, s
     });
   }
 
+  let analysisTracks = filteredTracks;
+  if (filter.type && filter.value) {
+    analysisTracks = filteredTracks.filter(track => {
+      if (filter.type === 'genre') {
+        const genreSource = track[genreKey] || (genreKey === 'Grouping' ? track.Genre : undefined);
+        return genreSource?.includes(filter.value!);
+      }
+      if (filter.type === 'artist') {
+        return track.Artist === filter.value;
+      }
+      return true;
+    });
+  }
+
   return {
-    mostPlayedTracks: getMostPlayedTracks(filteredTracks, 50, sortBy),
-    mostPlayedArtists: getMostPlayedArtists(filteredTracks, 50, sortBy),
-    mostPlayedAlbums: getMostPlayedAlbums(filteredTracks, 50, sortBy),
-    mostPlayedGenres: getMostPlayedGenres(filteredTracks, 50, sortBy, genreKey),
+    mostPlayedTracks: getMostPlayedTracks(analysisTracks, 50, sortBy),
+    mostPlayedArtists: getMostPlayedArtists(analysisTracks, 50, sortBy),
+    mostPlayedAlbums: getMostPlayedAlbums(analysisTracks, 50, sortBy),
+    mostPlayedGenres: getMostPlayedGenres(analysisTracks, 50, sortBy, genreKey),
     topThreeGenres: getTopThreeGenres(filteredTracks, count, genreKey),
     topThreeArtists: getTopThreeArtists(filteredTracks, count),
-    totalPlayCount: getTotalPlayCount(filteredTracks),
-    totalTime: getTotalTime(filteredTracks),
+    totalPlayCount: getTotalPlayCount(analysisTracks),
+    totalTime: getTotalTime(analysisTracks),
   };
 };
 

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { MostPlayed } from "./analysis/MostPlayed";
 import { GenreDistribution } from "./analysis/GenreDistribution";
 import { ArtistDistribution } from "./analysis/ArtistDistribution";
@@ -19,14 +19,18 @@ import { columns as tracksColumns } from "./analysis/most-played-tracks-columns"
 import { columns as artistsColumns } from "./analysis/most-played-artists-columns";
 import { columns as albumsColumns } from "./analysis/most-played-albums-columns";
 import { columns as genresColumns } from "./analysis/most-played-genres-columns";
-import { Music, Mic, Disc, BarChart, PieChart, LineChart, TrendingUp } from "lucide-react";
+import { Music, Mic, Disc, BarChart, PieChart, LineChart, TrendingUp, PanelLeft, X } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useAtom } from "jotai";
+import { activeTabAtom } from "@/atoms";
 
 export const Dashboard = () => {
-  const { analysis, tracks, setDateRange, setSortBy, sortBy, setGenreKey, genreKey, count, setCount } = useStore();
-  const [activeTab, setActiveTab] = useState("most-played-tracks");
+  const { analysis, tracks, setDateRange, setSortBy, sortBy, setGenreKey, genreKey, count, setCount, filter, setFilter } = useStore();
+  const [activeTab, setActiveTab] = useAtom(activeTabAtom);
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [endDate, setEndDate] = useState<Date | undefined>();
   const [trendingType, setTrendingType] = useState<"artist" | "album">("artist");
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const handleDateRangeChange = () => {
     setDateRange(startDate?.toISOString(), endDate?.toISOString());
@@ -42,9 +46,14 @@ export const Dashboard = () => {
 
   return (
     <div className="flex h-screen">
-      <div className="w-64 bg-sidebar text-sidebar-foreground p-4 overflow-y-auto">
-        <h1 className="text-2xl font-bold mb-4">Apple Music Analysis</h1>
-        <div className="mt-4">
+      <div className={cn("bg-sidebar text-sidebar-foreground p-4 overflow-y-auto transition-all duration-300", isSidebarCollapsed ? "w-16" : "w-64")}>
+        <div className="flex items-center justify-between">
+            {!isSidebarCollapsed && <h1 className="text-2xl font-bold">Analysis</h1>}
+            <Button variant="ghost" size="icon" onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}>
+                <PanelLeft />
+            </Button>
+        </div>
+        <div className={cn("mt-4", isSidebarCollapsed && "hidden")}>
             <h2 className="text-lg font-bold mb-2">Date Range</h2>
             <div className="flex flex-col space-y-2">
                 <DatePicker date={startDate} setDate={setStartDate} placeholder="Start Date" />
@@ -54,7 +63,7 @@ export const Dashboard = () => {
                 </Button>
             </div>
         </div>
-        <div className="mt-4">
+        <div className={cn("mt-4", isSidebarCollapsed && "hidden")}>
             <h2 className="text-lg font-bold mb-2">Genre Source</h2>
             <Select onValueChange={(value: "Grouping" | "Genre") => setGenreKey(value)} defaultValue={genreKey}>
                 <SelectTrigger>
@@ -68,7 +77,7 @@ export const Dashboard = () => {
         </div>
       </div>
       <div className="flex-1 p-8 overflow-y-auto">
-        <Tabs defaultValue="most-played-tracks" onValueChange={setActiveTab}>
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="flex flex-wrap h-auto">
             <TabsTrigger value="most-played-tracks"><Music className="mr-1" />Most Played Tracks</TabsTrigger>
             <TabsTrigger value="most-played-artists"><Mic className="mr-1" />Most Played Artists</TabsTrigger>
@@ -111,6 +120,14 @@ export const Dashboard = () => {
                     </div>
                 )}
             </div>
+            {filter.type && (
+                <div className="flex items-center space-x-2">
+                    <span className="text-sm">Filtered by {filter.type}: {filter.value}</span>
+                    <Button variant="ghost" size="icon" onClick={() => setFilter({ type: null, value: null })}>
+                        <X className="h-4 w-4" />
+                    </Button>
+                </div>
+            )}
         </div>
           <TabsContent value="most-played-tracks">
             <MostPlayed items={analysis.mostPlayedTracks.slice(0, count)} sortBy={sortBy} columns={tracksColumns} getLabel={(item) => `${item.name} by ${item.artist}`} />
