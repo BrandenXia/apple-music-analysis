@@ -46,3 +46,5 @@ After completing a feature, fix, or refactoring task, changes should be committe
 3.  **Format:** Run `bun run format` to ensure the code is consistently formatted.
 
 This ensures a clean and atomic commit history.
+
+**Note:** For commits that only include changes to documentation files (e.g., `.md`), all pre-commit checks may be skipped.
