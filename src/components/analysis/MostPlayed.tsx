@@ -1,6 +1,8 @@
+import { useAtomValue } from "jotai";
 import { useRef, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
+import { countAtom } from "@/atoms";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { DataTable } from "@/components/ui/data-table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -32,8 +34,9 @@ export const MostPlayed = <T extends MostPlayedItem>({
 }: Props<T>) => {
   const [selectedItem, setSelectedItem] = useState<T | null>(null);
   const exportRef = useRef<HTMLDivElement>(null);
+  const count = useAtomValue(countAtom);
 
-  const chartData = items.map((item) => ({
+  const chartData = items.slice(0, count).map((item) => ({
     name: getLabel(item),
     playCount: item.playCount,
     playTime: item.playTime / 1000 / 60 / 60,
@@ -88,7 +91,7 @@ export const MostPlayed = <T extends MostPlayedItem>({
           </ResponsiveContainer>
         </ChartContainer>
         <div className="mt-4">
-          <DataTable columns={columns} data={items} onRowClick={setSelectedItem} />
+          <DataTable columns={columns} data={items.slice(0, count)} onRowClick={setSelectedItem} />
         </div>
       </div>
       <div className="mt-4 flex justify-end">
