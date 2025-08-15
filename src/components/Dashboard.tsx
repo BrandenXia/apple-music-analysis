@@ -19,6 +19,7 @@ import { columns as tracksColumns } from "./analysis/most-played-tracks-columns"
 import { columns as artistsColumns } from "./analysis/most-played-artists-columns";
 import { columns as albumsColumns } from "./analysis/most-played-albums-columns";
 import { columns as genresColumns } from "./analysis/most-played-genres-columns";
+import { Music, Mic, Disc, BarChart, PieChart, LineChart, TrendingUp } from "lucide-react";
 
 export const Dashboard = () => {
   const { analysis, tracks, setDateRange, setSortBy, sortBy, setGenreKey, genreKey, count, setCount } = useStore();
@@ -41,7 +42,7 @@ export const Dashboard = () => {
 
   return (
     <div className="flex h-screen">
-      <div className="w-64 bg-gray-800 text-white p-4 overflow-y-auto">
+      <div className="w-64 bg-sidebar text-sidebar-foreground p-4 overflow-y-auto">
         <h1 className="text-2xl font-bold mb-4">Apple Music Analysis</h1>
         <div className="mt-4">
             <h2 className="text-lg font-bold mb-2">Date Range</h2>
@@ -68,14 +69,14 @@ export const Dashboard = () => {
       </div>
       <div className="flex-1 p-8 overflow-y-auto">
         <Tabs defaultValue="most-played-tracks" onValueChange={setActiveTab}>
-          <TabsList>
-            <TabsTrigger value="most-played-tracks">Most Played Tracks</TabsTrigger>
-            <TabsTrigger value="most-played-artists">Most Played Artists</TabsTrigger>
-            <TabsTrigger value="most-played-albums">Most Played Albums</TabsTrigger>
-            <TabsTrigger value="most-played-genres">Most Played Genres</TabsTrigger>
-            <TabsTrigger value="genre-distribution">Genre Distribution</TabsTrigger>
-            <TabsTrigger value="artist-distribution">Artist Distribution</TabsTrigger>
-            <TabsTrigger value="trending">Trending</TabsTrigger>
+          <TabsList className="flex flex-wrap h-auto">
+            <TabsTrigger value="most-played-tracks"><Music className="mr-1" />Most Played Tracks</TabsTrigger>
+            <TabsTrigger value="most-played-artists"><Mic className="mr-1" />Most Played Artists</TabsTrigger>
+            <TabsTrigger value="most-played-albums"><Disc className="mr-1" />Most Played Albums</TabsTrigger>
+            <TabsTrigger value="most-played-genres"><BarChart className="mr-1" />Most Played Genres</TabsTrigger>
+            <TabsTrigger value="genre-distribution"><PieChart className="mr-1" />Genre Distribution</TabsTrigger>
+            <TabsTrigger value="artist-distribution"><LineChart className="mr-1" />Artist Distribution</TabsTrigger>
+            <TabsTrigger value="trending"><TrendingUp className="mr-1" />Trending</TabsTrigger>
           </TabsList>
           <div className="flex justify-between items-center my-4">
             <div className="flex items-center space-x-4">
