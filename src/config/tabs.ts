@@ -1,4 +1,14 @@
-import { BarChart, Disc, History, LineChart, Mic, Music, PieChart, TrendingUp } from "lucide-react";
+import {
+  BarChart,
+  Disc,
+  History,
+  LineChart,
+  Mic,
+  Music,
+  PieChart,
+  TrendingUp,
+  User,
+} from "lucide-react";
 
 import { columns as albumsColumns } from "@/components/analysis/columns/most-played-albums";
 import { columns as artistsColumns } from "@/components/analysis/columns/most-played-artists";
@@ -62,6 +72,11 @@ export const otherTabs = [
     value: "forgotten-favorites",
     icon: History,
     label: "Forgotten Favorites",
+  },
+  {
+    value: "music-taste-profile",
+    icon: User,
+    label: "Music Taste Profile",
   },
 ];
 

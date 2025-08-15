@@ -21,13 +21,14 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { allTabs, mostPlayedTabs } from "@/config/tabs";
-import { getTrendingData } from "@/lib/analysis";
+import { getTrendingData } from "@/lib/analysis/trending-data";
 
 import { columns as artistDistributionColumns } from "./analysis/columns/artist-distribution";
 import { columns as genreDistributionColumns } from "./analysis/columns/genre-distribution";
 import { DistributionChart } from "./analysis/DistributionChart";
 import { ForgottenFavorites } from "./analysis/ForgottenFavorites";
 import { MostPlayed } from "./analysis/MostPlayed";
+import { MusicTasteProfile } from "./analysis/MusicTasteProfile";
 import { Trending } from "./analysis/Trending";
 
 import type { ColumnDef } from "@tanstack/react-table";
@@ -135,6 +136,9 @@ export const Dashboard = () => {
           </TabsContent>
           <TabsContent value="forgotten-favorites">
             <ForgottenFavorites items={analysis.forgottenFavorites} />
+          </TabsContent>
+          <TabsContent value="music-taste-profile">
+            <MusicTasteProfile profile={analysis.musicTasteProfile} />
           </TabsContent>
         </Tabs>
       </div>

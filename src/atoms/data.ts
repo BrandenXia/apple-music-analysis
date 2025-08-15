@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 
-import { analyze } from "@/lib/analysis";
+import { analyze } from "@/lib/analyzer";
 
 import {
   countAtom,

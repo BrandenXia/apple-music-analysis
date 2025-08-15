@@ -50,4 +50,15 @@ export interface Analysis {
   totalPlayCount: number;
   totalTime: string;
   forgottenFavorites: TopTrack[];
+  musicTasteProfile: MusicTasteProfileData;
+}
+
+export interface MusicTasteProfileData {
+  topDecade: { decade: string; count: number } | null;
+  oldestFavorite?: TopTrack;
+  newestFavorite?: TopTrack;
+  listenerType: {
+    type: "Specialist" | "Generalist";
+    description: string;
+  };
 }
