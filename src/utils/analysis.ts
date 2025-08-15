@@ -1,7 +1,8 @@
 import type { Track, Analysis, TopTrack, TopArtist, TopAlbum, TopGenre } from "../types";
 import { formatDuration, intervalToDuration } from "date-fns";
+import Fuse from "fuse.js";
 
-export const analyze = (tracks: Track[], startDate?: string, endDate?: string, sortBy: "playCount" | "playTime" = "playCount", genreKey: "Grouping" | "Genre" = "Grouping", count: number = 5, filter: { type: 'genre' | 'artist' | null; value: string | null } = { type: null, value: null }): Analysis => {
+export const analyze = (tracks: Track[], startDate?: string, endDate?: string, sortBy: "playCount" | "playTime" = "playCount", genreKey: "Grouping" | "Genre" = "Grouping", count: number = 5, filter: { type: 'genre' | 'artist' | null; value: string | null } = { type: null, value: null }, searchTerm: string = ""): Analysis => {
   let filteredTracks = tracks;
   if (startDate && endDate) {
     filteredTracks = tracks.filter(track => {
@@ -22,6 +23,14 @@ export const analyze = (tracks: Track[], startDate?: string, endDate?: string, s
       }
       return true;
     });
+  }
+
+  if (searchTerm) {
+    const fuse = new Fuse(analysisTracks, {
+        keys: ['Name', 'Artist', 'Album'],
+        threshold: 0.3,
+    });
+    analysisTracks = fuse.search(searchTerm).map(result => result.item);
   }
 
   return {

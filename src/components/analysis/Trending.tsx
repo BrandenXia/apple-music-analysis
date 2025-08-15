@@ -9,6 +9,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { useRef } from "react";
+import { ExportButton } from "../ExportButton";
 
 ChartJS.register(
   CategoryScale,
@@ -33,6 +35,8 @@ interface Props {
 }
 
 export const Trending = ({ data }: Props) => {
+  const exportRef = useRef<HTMLDivElement>(null);
+
   const options = {
     responsive: true,
     plugins: {
@@ -46,5 +50,14 @@ export const Trending = ({ data }: Props) => {
     },
   };
 
-  return <Line options={options} data={data} />;
+  return (
+    <div>
+      <div ref={exportRef}>
+        <Line options={options} data={data} />
+      </div>
+      <div className="mt-4 flex justify-end">
+        <ExportButton elementRef={exportRef} fileName="trending" />
+      </div>
+    </div>
+  );
 };

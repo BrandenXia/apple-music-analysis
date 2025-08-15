@@ -13,12 +13,13 @@ import { formatDuration, intervalToDuration } from "date-fns";
 import { DataTable } from "@/components/ui/data-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { TopTrack, TopArtist, TopAlbum, TopGenre } from "@/types";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Song } from "./Song";
 import { Artist } from "./Artist";
 import { Album } from "./Album";
 import { useRef, useState } from "react";
 import { getElementAtEvent } from "react-chartjs-2";
+import { ExportButton } from "../ExportButton";
 
 ChartJS.register(
     CategoryScale,
@@ -41,6 +42,7 @@ interface Props<T extends MostPlayedItem> {
 export const MostPlayed = <T extends MostPlayedItem>({ items, sortBy, columns, getLabel }: Props<T>) => {
     const [selectedItem, setSelectedItem] = useState<T | null>(null);
     const chartRef = useRef<Chart<'bar', number[], string>>(null);
+    const exportRef = useRef<HTMLDivElement>(null);
 
     const playCountDataset = {
         label: "Play Count",
@@ -113,9 +115,14 @@ export const MostPlayed = <T extends MostPlayedItem>({ items, sortBy, columns, g
 
     return (
         <Dialog open={!!selectedItem} onOpenChange={(open) => !open && setSelectedItem(null)}>
-            <Bar options={options} data={data} onClick={onClick} ref={chartRef} />
-            <div className="mt-4">
-                <DataTable columns={columns} data={items} />
+            <div ref={exportRef}>
+                <Bar options={options} data={data} onClick={onClick} ref={chartRef} />
+                <div className="mt-4">
+                    <DataTable columns={columns} data={items} />
+                </div>
+            </div>
+            <div className="mt-4 flex justify-end">
+                <ExportButton elementRef={exportRef} fileName="most-played" />
             </div>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>

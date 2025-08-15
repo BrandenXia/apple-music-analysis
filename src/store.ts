@@ -11,6 +11,7 @@ interface State {
   genreKey: "Grouping" | "Genre";
   count: number;
   filter: { type: 'genre' | 'artist' | null; value: string | null };
+  searchTerm: string;
 }
 
 interface Actions {
@@ -20,6 +21,7 @@ interface Actions {
   setGenreKey: (genreKey: "Grouping" | "Genre") => void;
   setCount: (count: number) => void;
   setFilter: (filter: { type: 'genre' | 'artist' | null; value: string | null }) => void;
+  setSearchTerm: (searchTerm: string) => void;
 }
 
 export const useStore = create<State & Actions>((set, get) => ({
@@ -29,47 +31,55 @@ export const useStore = create<State & Actions>((set, get) => ({
   genreKey: "Grouping",
   count: 5,
   filter: { type: null, value: null },
+  searchTerm: "",
   setTracks: (tracks) => {
-    const { startDate, endDate, sortBy, genreKey, count, filter } = get();
+    const { startDate, endDate, sortBy, genreKey, count, filter, searchTerm } = get();
     set({
       tracks,
-      analysis: analyze(tracks, startDate, endDate, sortBy, genreKey, count, filter),
+      analysis: analyze(tracks, startDate, endDate, sortBy, genreKey, count, filter, searchTerm),
     });
   },
   setDateRange: (startDate, endDate) => {
-    const { tracks, sortBy, genreKey, count, filter } = get();
+    const { tracks, sortBy, genreKey, count, filter, searchTerm } = get();
     set({
       startDate,
       endDate,
-      analysis: analyze(tracks, startDate, endDate, sortBy, genreKey, count, filter),
+      analysis: analyze(tracks, startDate, endDate, sortBy, genreKey, count, filter, searchTerm),
     });
   },
   setSortBy: (sortBy) => {
-    const { tracks, startDate, endDate, genreKey, count, filter } = get();
+    const { tracks, startDate, endDate, genreKey, count, filter, searchTerm } = get();
     set({
       sortBy,
-      analysis: analyze(tracks, startDate, endDate, sortBy, genreKey, count, filter),
+      analysis: analyze(tracks, startDate, endDate, sortBy, genreKey, count, filter, searchTerm),
     });
   },
   setGenreKey: (genreKey) => {
-    const { tracks, startDate, endDate, sortBy, count, filter } = get();
+    const { tracks, startDate, endDate, sortBy, count, filter, searchTerm } = get();
     set({
       genreKey,
-      analysis: analyze(tracks, startDate, endDate, sortBy, genreKey, count, filter),
+      analysis: analyze(tracks, startDate, endDate, sortBy, genreKey, count, filter, searchTerm),
     });
   },
   setCount: (count) => {
-    const { tracks, startDate, endDate, sortBy, genreKey, filter } = get();
+    const { tracks, startDate, endDate, sortBy, genreKey, filter, searchTerm } = get();
     set({
       count,
-      analysis: analyze(tracks, startDate, endDate, sortBy, genreKey, count, filter),
+      analysis: analyze(tracks, startDate, endDate, sortBy, genreKey, count, filter, searchTerm),
     });
   },
   setFilter: (filter) => {
-    const { tracks, startDate, endDate, sortBy, genreKey, count } = get();
+    const { tracks, startDate, endDate, sortBy, genreKey, count, searchTerm } = get();
     set({
       filter,
-      analysis: analyze(tracks, startDate, endDate, sortBy, genreKey, count, filter),
+      analysis: analyze(tracks, startDate, endDate, sortBy, genreKey, count, filter, searchTerm),
+    });
+  },
+  setSearchTerm: (searchTerm) => {
+    const { tracks, startDate, endDate, sortBy, genreKey, count, filter } = get();
+    set({
+      searchTerm,
+      analysis: analyze(tracks, startDate, endDate, sortBy, genreKey, count, filter, searchTerm),
     });
   },
 }));

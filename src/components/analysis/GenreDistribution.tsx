@@ -9,6 +9,7 @@ import { getElementAtEvent } from "react-chartjs-2";
 import { useAtom } from "jotai";
 import { activeTabAtom } from "@/atoms";
 import { legendSpacingPlugin } from "@/lib/chart-plugins";
+import { ExportButton } from "../ExportButton";
 
 ChartJS.register(ArcElement, Tooltip, Legend, legendSpacingPlugin);
 
@@ -20,6 +21,7 @@ export const GenreDistribution = ({ genres }: Props) => {
   const { setFilter, filter } = useStore();
   const [, setActiveTab] = useAtom(activeTabAtom);
   const chartRef = useRef<Chart<'pie', number[], string>>(null);
+  const exportRef = useRef<HTMLDivElement>(null);
 
   const data = {
     labels: genres.map((g) => g.name),
@@ -65,11 +67,16 @@ export const GenreDistribution = ({ genres }: Props) => {
 
   return (
     <div>
-      <div className="w-full max-w-2xl h-auto mx-auto">
-        <Pie data={data} options={{ responsive: true, maintainAspectRatio: true }} onClick={onClick} ref={chartRef} />
+      <div ref={exportRef}>
+        <div className="w-full max-w-2xl h-auto mx-auto">
+          <Pie data={data} options={{ responsive: true, maintainAspectRatio: true }} onClick={onClick} ref={chartRef} />
+        </div>
+        <div className="mt-4">
+          <DataTable columns={columns} data={genres} />
+        </div>
       </div>
-      <div className="mt-4">
-        <DataTable columns={columns} data={genres} />
+      <div className="mt-4 flex justify-end">
+        <ExportButton elementRef={exportRef} fileName="genre-distribution" />
       </div>
     </div>
   );

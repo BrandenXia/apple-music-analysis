@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DatePicker } from "@/components/ui/datepicker";
+import { Input } from "@/components/ui/input";
 import { columns as tracksColumns } from "./analysis/most-played-tracks-columns";
 import { columns as artistsColumns } from "./analysis/most-played-artists-columns";
 import { columns as albumsColumns } from "./analysis/most-played-albums-columns";
@@ -26,7 +27,7 @@ import { activeTabAtom } from "@/atoms";
 import type { TopTrack } from "@/types";
 
 export const Dashboard = () => {
-  const { analysis, tracks, setDateRange, setSortBy, sortBy, setGenreKey, genreKey, count, setCount, filter, setFilter } = useStore();
+  const { analysis, tracks, setDateRange, setSortBy, sortBy, setGenreKey, genreKey, count, setCount, filter, setFilter, searchTerm, setSearchTerm } = useStore();
   const [activeTab, setActiveTab] = useAtom(activeTabAtom);
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [endDate, setEndDate] = useState<Date | undefined>();
@@ -90,6 +91,14 @@ export const Dashboard = () => {
           </TabsList>
           <div className="flex justify-between items-center my-4">
             <div className="flex items-center space-x-4">
+                {activeTab.startsWith("most-played") && (
+                    <Input 
+                        placeholder="Search..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="max-w-sm"
+                    />
+                )}
                 {(activeTab.startsWith("most-played") || activeTab.endsWith("-distribution")) && (
                     <div className="flex items-center space-x-2">
                         <label htmlFor="count">Show top</label>
