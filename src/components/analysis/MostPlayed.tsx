@@ -8,10 +8,17 @@ import {
     Tooltip,
     Legend,
 } from "chart.js";
+import type { Chart } from "chart.js";
 import { formatDuration, intervalToDuration } from "date-fns";
 import { DataTable } from "@/components/ui/data-table";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { TopTrack, TopArtist, TopAlbum, TopGenre } from "@/types";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Song } from "./Song";
+import { Artist } from "./Artist";
+import { Album } from "./Album";
+import { useRef, useState } from "react";
+import { getElementAtEvent } from "react-chartjs-2";
 
 ChartJS.register(
     CategoryScale,
@@ -32,6 +39,9 @@ interface Props<T extends MostPlayedItem> {
 }
 
 export const MostPlayed = <T extends MostPlayedItem>({ items, sortBy, columns, getLabel }: Props<T>) => {
+    const [selectedItem, setSelectedItem] = useState<T | null>(null);
+    const chartRef = useRef<Chart<'bar', number[], string>>(null);
+
     const playCountDataset = {
         label: "Play Count",
         data: items.map(item => item.playCount),
@@ -55,6 +65,15 @@ export const MostPlayed = <T extends MostPlayedItem>({ items, sortBy, columns, g
     const data = {
         labels: items.map(item => getLabel(item)),
         datasets,
+    };
+
+    const onClick = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+        if (!chartRef.current) return;
+        const element = getElementAtEvent(chartRef.current, event);
+        if (element.length > 0) {
+            const { index } = element[0];
+            setSelectedItem(items[index]);
+        }
     };
 
     const options = {
@@ -93,11 +112,19 @@ export const MostPlayed = <T extends MostPlayedItem>({ items, sortBy, columns, g
     };
 
     return (
-        <div>
-            <Bar options={options} data={data} />
+        <Dialog open={!!selectedItem} onOpenChange={(open) => !open && setSelectedItem(null)}>
+            <Bar options={options} data={data} onClick={onClick} ref={chartRef} />
             <div className="mt-4">
                 <DataTable columns={columns} data={items} />
             </div>
-        </div>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Details</DialogTitle>
+                </DialogHeader>
+                {selectedItem && 'artist' in selectedItem && <Song track={(selectedItem as TopTrack).track} />}
+                {selectedItem && 'tracks' in selectedItem && !('artist' in selectedItem) && <Album album={selectedItem as TopAlbum} />}
+                {selectedItem && !('tracks' in selectedItem) && !('artist' in selectedItem) && <Artist artist={selectedItem as TopArtist} />}
+            </DialogContent>
+        </Dialog>
     );
 };

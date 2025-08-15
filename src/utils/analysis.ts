@@ -50,6 +50,7 @@ const getMostPlayedTracks = (tracks: Track[], count: number, sortBy: "playCount"
       artist: track.Artist,
       playCount: track["Play Count"],
       playTime: track["Total Time"] * track["Play Count"],
+      track,
     }));
 };
 

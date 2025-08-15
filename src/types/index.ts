@@ -1,4 +1,3 @@
-
 export interface Track {
   Name: string;
   Artist: string;
@@ -9,6 +8,14 @@ export interface Track {
   "Play Count": number;
   "Total Time": number;
   "Date Added": string;
+}
+
+export interface TopTrack {
+  name: string;
+  artist: string;
+  playCount: number;
+  playTime: number;
+  track: Track;
 }
 
 export interface TopArtist {
@@ -30,13 +37,6 @@ export interface TopGenre {
   playCount: number;
   playTime: number;
   tracks: Track[];
-}
-
-export interface TopTrack {
-  name: string;
-  artist: string;
-  playCount: number;
-  playTime: number;
 }
 
 export interface Analysis {
