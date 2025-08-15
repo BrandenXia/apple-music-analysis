@@ -6,6 +6,7 @@ export interface Track {
   Grouping: string;
   Year: number;
   "Play Count": number;
+  "Play Date UTC": string;
   "Total Time": number;
   "Date Added": string;
 }
@@ -48,4 +49,5 @@ export interface Analysis {
   topThreeArtists: { name: string; count: number }[];
   totalPlayCount: number;
   totalTime: string;
+  forgottenFavorites: TopTrack[];
 }

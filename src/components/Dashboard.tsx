@@ -26,6 +26,7 @@ import { getTrendingData } from "@/lib/analysis";
 import { columns as artistDistributionColumns } from "./analysis/columns/artist-distribution";
 import { columns as genreDistributionColumns } from "./analysis/columns/genre-distribution";
 import { DistributionChart } from "./analysis/DistributionChart";
+import { ForgottenFavorites } from "./analysis/ForgottenFavorites";
 import { MostPlayed } from "./analysis/MostPlayed";
 import { Trending } from "./analysis/Trending";
 
@@ -131,6 +132,9 @@ export const Dashboard = () => {
               </div>
               {trendingData && <Trending data={trendingData} />}
             </div>
+          </TabsContent>
+          <TabsContent value="forgotten-favorites">
+            <ForgottenFavorites items={analysis.forgottenFavorites} />
           </TabsContent>
         </Tabs>
       </div>

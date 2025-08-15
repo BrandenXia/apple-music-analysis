@@ -52,6 +52,7 @@ export const analyze = (
     topThreeArtists: getTopThreeArtists(filteredTracks, count),
     totalPlayCount: getTotalPlayCount(analysisTracks),
     totalTime: getTotalTime(analysisTracks),
+    forgottenFavorites: getForgottenFavorites(analysisTracks, 50),
   };
 };
 
@@ -288,4 +289,24 @@ export const getTrendingData = (tracks: Track[], type: "artist" | "album") => {
     labels,
     datasets,
   };
+};
+
+export const getForgottenFavorites = (tracks: Track[], count: number): TopTrack[] => {
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+
+  return tracks
+    .filter((track) => {
+      const lastPlayed = new Date(track["Play Date UTC"]);
+      return lastPlayed < sixMonthsAgo;
+    })
+    .sort((a, b) => b["Play Count"] - a["Play Count"])
+    .slice(0, count)
+    .map((track) => ({
+      name: track.Name,
+      artist: track.Artist,
+      playCount: track["Play Count"],
+      playTime: track["Total Time"] * track["Play Count"],
+      track,
+    }));
 };

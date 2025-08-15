@@ -26,6 +26,7 @@ export const parse = (xml: string): Track[] => {
       Grouping: trackData.Grouping,
       Year: parseInt(trackData.Year, 10),
       "Play Count": parseInt(trackData["Play Count"], 10) || 0,
+      "Play Date UTC": trackData["Play Date UTC"],
       "Total Time": parseInt(trackData["Total Time"], 10),
       "Date Added": trackData["Date Added"],
     });
