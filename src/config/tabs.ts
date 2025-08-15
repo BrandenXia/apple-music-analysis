@@ -33,6 +33,7 @@ export const mostPlayedTabs = [
     dataKey: "mostPlayedArtists",
     columns: artistsColumns,
     getLabel: (item: { name: string }) => item.name,
+    filterType: "artist",
   },
   {
     value: "most-played-albums",
@@ -41,6 +42,7 @@ export const mostPlayedTabs = [
     dataKey: "mostPlayedAlbums",
     columns: albumsColumns,
     getLabel: (item: { name: string }) => item.name,
+    filterType: "album",
   },
   {
     value: "most-played-genres",
@@ -49,6 +51,7 @@ export const mostPlayedTabs = [
     dataKey: "mostPlayedGenres",
     columns: genresColumns,
     getLabel: (item: { name: string }) => item.name,
+    filterType: "genre",
   },
 ];
 

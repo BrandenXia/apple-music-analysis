@@ -92,6 +92,7 @@ export const Dashboard = () => {
                 sortBy={sortBy}
                 columns={tab.columns as ColumnDef<MostPlayedItem, unknown>[]}
                 getLabel={tab.getLabel as (item: MostPlayedItem) => string}
+                filterType={tab.filterType as "artist" | "album" | "genre"}
               />
             </TabsContent>
           ))}

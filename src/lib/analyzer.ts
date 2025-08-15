@@ -22,7 +22,10 @@ export const analyze = (
   sortBy: "playCount" | "playTime" = "playCount",
   genreKey: "Grouping" | "Genre" = "Grouping",
   count: number = 5,
-  filter: { type: "genre" | "artist" | null; value: string | null } = { type: null, value: null },
+  filter: { type: "genre" | "artist" | "album" | null; value: string | null } = {
+    type: null,
+    value: null,
+  },
   searchTerm: string = "",
 ): Analysis => {
   let filteredTracks = tracks;
@@ -42,6 +45,9 @@ export const analyze = (
       }
       if (filter.type === "artist") {
         return track.Artist === filter.value;
+      }
+      if (filter.type === "album") {
+        return track.Album === filter.value;
       }
       return true;
     });

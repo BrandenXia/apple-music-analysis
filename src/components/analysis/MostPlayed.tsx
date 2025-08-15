@@ -1,8 +1,8 @@
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useRef, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
-import { countAtom } from "@/atoms";
+import { activeTabAtom, countAtom, filterAtom } from "@/atoms";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { DataTable } from "@/components/ui/data-table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -24,6 +24,11 @@ interface Props<T extends MostPlayedItem> {
   sortBy: "playCount" | "playTime";
   columns: ColumnDef<T, unknown>[];
   getLabel: (item: T) => string;
+  filterType?: "artist" | "album" | "genre";
+}
+
+interface BarClickEvent {
+  activeTooltipIndex?: number;
 }
 
 export const MostPlayed = <T extends MostPlayedItem>({
@@ -31,16 +36,33 @@ export const MostPlayed = <T extends MostPlayedItem>({
   sortBy,
   columns,
   getLabel,
+  filterType,
 }: Props<T>) => {
   const [selectedItem, setSelectedItem] = useState<T | null>(null);
   const exportRef = useRef<HTMLDivElement>(null);
   const count = useAtomValue(countAtom);
+  const setFilter = useSetAtom(filterAtom);
+  const setActiveTab = useSetAtom(activeTabAtom);
 
   const chartData = items.slice(0, count).map((item) => ({
     name: getLabel(item),
     playCount: item.playCount,
     playTime: item.playTime / 1000 / 60 / 60,
   }));
+
+  const handleBarClick = (e: BarClickEvent) => {
+    if (e.activeTooltipIndex === undefined) return;
+
+    const item = items[e.activeTooltipIndex];
+    if (!item) return;
+
+    if (filterType) {
+      setFilter({ type: filterType, value: item.name });
+      setActiveTab("most-played-tracks");
+    } else {
+      setSelectedItem(item);
+    }
+  };
 
   const bars =
     sortBy === "playTime"
@@ -72,7 +94,8 @@ export const MostPlayed = <T extends MostPlayedItem>({
               data={chartData}
               layout="vertical"
               margin={{ left: 120 }}
-              onClick={(e) => e && setSelectedItem(items[e.activeTooltipIndex as number])}
+              onClick={handleBarClick}
+              className={filterType ? "cursor-pointer" : ""}
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis type="number" />
