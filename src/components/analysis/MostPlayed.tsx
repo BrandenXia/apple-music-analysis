@@ -117,7 +117,7 @@ export const MostPlayed = <T extends MostPlayedItem>({ items, sortBy, columns, g
             <div className="mt-4">
                 <DataTable columns={columns} data={items} />
             </div>
-            <DialogContent>
+            <DialogContent className="sm:max-w-md">
                 <DialogHeader>
                     <DialogTitle>Details</DialogTitle>
                 </DialogHeader>
