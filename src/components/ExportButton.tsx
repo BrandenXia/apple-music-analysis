@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import html2canvas from "html2canvas";
+import html2canvas from "html2canvas-pro";
 import { Download } from "lucide-react";
 
 interface Props {

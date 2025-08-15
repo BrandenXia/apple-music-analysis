@@ -90,7 +90,7 @@ export const Dashboard = () => {
             <TabsTrigger value="trending"><TrendingUp className="mr-1" />Trending</TabsTrigger>
           </TabsList>
           <div className="flex justify-between items-center my-4">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4 flex-nowrap">
                 {activeTab.startsWith("most-played") && (
                     <Input 
                         placeholder="Search..."
@@ -101,7 +101,7 @@ export const Dashboard = () => {
                 )}
                 {(activeTab.startsWith("most-played") || activeTab.endsWith("-distribution")) && (
                     <div className="flex items-center space-x-2">
-                        <label htmlFor="count">Show top</label>
+                        <label htmlFor="count" className="whitespace-nowrap">Show top</label>
                         <Select onValueChange={(value) => setCount(parseInt(value, 10))} defaultValue={count.toString()}>
                             <SelectTrigger id="count" className="w-[80px]">
                                 <SelectValue placeholder="Select count" />
@@ -117,7 +117,7 @@ export const Dashboard = () => {
                 )}
                 {activeTab.startsWith("most-played") && (
                     <div className="flex items-center space-x-2">
-                        <label htmlFor="sort-by">Sort by</label>
+                        <label htmlFor="sort-by" className="whitespace-nowrap">Sort by</label>
                         <Select onValueChange={(value: "playCount" | "playTime") => setSortBy(value)} defaultValue={sortBy}>
                             <SelectTrigger id="sort-by" className="w-[120px]">
                                 <SelectValue placeholder="Sort by" />
