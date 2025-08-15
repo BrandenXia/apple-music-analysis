@@ -9,7 +9,6 @@ interface Props {
 }
 
 export const Artist = ({ artist }: Props) => {
-
   const genres = [
     ...new Set(
       artist.tracks
@@ -44,9 +43,7 @@ export const Artist = ({ artist }: Props) => {
           </div>
           <div className="flex justify-between">
             <p className="text-muted-foreground">Play Time</p>
-            <p className="font-medium text-right">
-              {formatTimeDuration(artist.playTime)}
-            </p>
+            <p className="text-right font-medium">{formatTimeDuration(artist.playTime)}</p>
           </div>
         </div>
       </div>

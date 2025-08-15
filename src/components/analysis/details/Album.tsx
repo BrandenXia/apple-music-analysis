@@ -71,9 +71,7 @@ export const Album = ({ album }: Props) => {
           </div>
           <div className="flex justify-between">
             <p className="text-muted-foreground">Play Time</p>
-            <p className="font-medium text-right">
-              {formatTimeDuration(album.playTime)}
-            </p>
+            <p className="text-right font-medium">{formatTimeDuration(album.playTime)}</p>
           </div>
         </div>
       </div>

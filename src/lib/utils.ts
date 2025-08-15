@@ -1,6 +1,6 @@
 import { clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 import { formatDuration as formatDurationFns, intervalToDuration } from "date-fns";
+import { twMerge } from "tailwind-merge";
 
 import type { ClassValue } from "clsx";
 import type { Duration } from "date-fns";
@@ -23,8 +23,5 @@ export const formatTimeDuration = (milliseconds: number) => {
 };
 
 export const toTitleCase = (str: string) => {
-  return str.replace(
-    /\w\S*/g,
-    (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(),
-  );
+  return str.replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
 };
