@@ -1,10 +1,10 @@
-import { formatDuration, intervalToDuration } from "date-fns";
 import { useRef, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { DataTable } from "@/components/ui/data-table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { formatTimeDuration } from "@/lib/utils";
 
 import { ExportButton } from "../ExportButton";
 import { Album } from "./Album";
@@ -76,14 +76,9 @@ export const MostPlayed = <T extends MostPlayedItem>({
               <YAxis dataKey="name" type="category" width={120} tick={{ fontSize: 12 }} />
               <ChartTooltip
                 formatter={(value, name) => {
-                  if (name === "Play Time (hours)")
-                    return formatDuration(
-                      intervalToDuration({
-                        start: 0,
-                        end: (value as number) * 60 * 60 * 1000,
-                      }),
-                    );
-
+                  if (name === "Play Time (hours)") {
+                    return formatTimeDuration((value as number) * 60 * 60 * 1000);
+                  }
                   return value.toString();
                 }}
               />

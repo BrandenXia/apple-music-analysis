@@ -1,9 +1,9 @@
-import { formatDuration, intervalToDuration } from "date-fns";
 import { Music } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { getTrackImage } from "@/lib/musicbrainz";
+import { formatTimeDuration } from "@/lib/utils";
 
 import type { Track } from "@/types";
 
@@ -29,38 +29,38 @@ export const Song = ({ track }: Props) => {
   }, [track]);
 
   return (
-    <div>
+    <div className="space-y-4">
       <div className="flex items-start space-x-4">
         {loading ? (
-          <Skeleton className="h-32 w-32 flex-shrink-0 rounded-md" />
+          <Skeleton className="h-28 w-28 flex-shrink-0 rounded-md" />
         ) : imageUrl ? (
-          <img src={imageUrl} alt={track.Name} className="h-32 w-32 flex-shrink-0 rounded-md" />
+          <img src={imageUrl} alt={track.Name} className="h-28 w-28 flex-shrink-0 rounded-md" />
         ) : (
-          <div className="bg-muted flex h-32 w-32 flex-shrink-0 items-center justify-center rounded-md">
-            <Music className="text-muted-foreground h-16 w-16" />
+          <div className="bg-muted flex h-28 w-28 flex-shrink-0 items-center justify-center rounded-md">
+            <Music className="text-muted-foreground h-14 w-14" />
           </div>
         )}
-        <div className="min-w-0 flex-1">
-          <h2 className="text-2xl font-bold">{track.Name}</h2>
+        <div className="min-w-0 flex-1 space-y-1">
+          <h2 className="text-xl font-bold">{track.Name}</h2>
           <p className="text-muted-foreground">{track.Artist}</p>
-          <p className="text-muted-foreground mt-1 text-sm">
+          <p className="text-muted-foreground text-sm">
             {track.Album} ({track.Year})
           </p>
-          <p className="text-muted-foreground mt-1 text-sm">{track.Genre}</p>
+          <p className="text-muted-foreground text-sm">{track.Genre}</p>
         </div>
       </div>
-      <div className="mt-4 grid grid-cols-2 gap-4 text-center">
-        <div>
-          <p className="text-muted-foreground text-sm font-medium">Play Count</p>
-          <p className="text-2xl font-bold">{track["Play Count"]}</p>
-        </div>
-        <div>
-          <p className="text-muted-foreground text-sm font-medium">Play Time</p>
-          <p className="text-lg font-semibold break-words">
-            {formatDuration(
-              intervalToDuration({ start: 0, end: track["Total Time"] * track["Play Count"] }),
-            )}
-          </p>
+      <div className="border-border border-t pt-4">
+        <div className="space-y-2 text-sm">
+          <div className="flex justify-between">
+            <p className="text-muted-foreground">Play Count</p>
+            <p className="font-medium">{track["Play Count"]}</p>
+          </div>
+          <div className="flex justify-between">
+            <p className="text-muted-foreground">Play Time</p>
+            <p className="font-medium text-right">
+              {formatTimeDuration(track["Total Time"] * track["Play Count"])}
+            </p>
+          </div>
         </div>
       </div>
     </div>
