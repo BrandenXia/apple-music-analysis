@@ -41,7 +41,7 @@ export const Trending = ({ data }: Props) => {
                     <Tooltip content={<ChartTooltipContent />} />
                     <Legend />
                     {data.datasets.map(dataset => (
-                        <Line key={dataset.label} type="monotone" dataKey={dataset.label} stroke={dataset.borderColor} />
+                        <Line key={dataset.label} type="monotone" dataKey={dataset.label} stroke={dataset.borderColor} strokeWidth={2} />
                     ))}
                 </LineChart>
             </ResponsiveContainer>
