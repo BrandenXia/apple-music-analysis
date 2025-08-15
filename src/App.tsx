@@ -1,9 +1,10 @@
 import { useAtom, useAtomValue } from "jotai";
 
+import { parse } from "@/lib/parser";
+
 import { analysisAtom, tracksAtom } from "./atoms";
 import { Dashboard } from "./components/Dashboard";
 import { FileUploader } from "./components/FileUploader";
-import { parse } from "./utils/parser";
 
 function App() {
   const [tracks, setTracks] = useAtom(tracksAtom);

@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { allTabs, mostPlayedTabs } from "@/config/tabs";
-import { getTrendingData } from "@/utils/analysis";
+import { getTrendingData } from "@/lib/analysis";
 
 import { columns as artistDistributionColumns } from "./analysis/columns/artist-distribution";
 import { columns as genreDistributionColumns } from "./analysis/columns/genre-distribution";
