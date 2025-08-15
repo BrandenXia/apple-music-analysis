@@ -54,11 +54,7 @@ export const Sidebar = ({
       <div className={cn("mt-4", isSidebarCollapsed && "hidden")}>
         <h2 className="mb-2 text-lg font-bold">Date Range</h2>
         <div className="flex flex-col space-y-2">
-          <DatePicker
-            date={startDateValue}
-            setDate={setStartDateValue}
-            placeholder="Start Date"
-          />
+          <DatePicker date={startDateValue} setDate={setStartDateValue} placeholder="Start Date" />
           <DatePicker date={endDateValue} setDate={setEndDateValue} placeholder="End Date" />
           <Button onClick={handleDateRangeChange}>Apply</Button>
         </div>
