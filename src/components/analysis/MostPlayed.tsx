@@ -111,3 +111,5 @@ export const MostPlayed = <T extends MostPlayedItem>({
     </Dialog>
   );
 };
+
+export type { MostPlayedItem };

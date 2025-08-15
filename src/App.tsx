@@ -1,17 +1,20 @@
+import { useAtom, useAtomValue } from "jotai";
+
+import { analysisAtom, tracksAtom } from "./atoms";
 import { Dashboard } from "./components/Dashboard";
 import { FileUploader } from "./components/FileUploader";
-import { useStore } from "./store";
 import { parse } from "./utils/parser";
 
 function App() {
-  const { tracks, analysis, setTracks } = useStore();
+  const [tracks, setTracks] = useAtom(tracksAtom);
+  const analysis = useAtomValue(analysisAtom);
 
   const handleFileUploaded = (file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       if (e.target?.result) {
-        const tracks = parse(e.target.result as string);
-        setTracks(tracks);
+        const parsedTracks = parse(e.target.result as string);
+        setTracks(parsedTracks);
       }
     };
     reader.readAsText(file);

@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
   BarChart,
   Disc,
@@ -12,7 +12,18 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import { activeTabAtom } from "@/atoms";
+import {
+  activeTabAtom,
+  analysisAtom,
+  countAtom,
+  endDateAtom,
+  filterAtom,
+  genreKeyAtom,
+  searchTermAtom,
+  sortByAtom,
+  startDateAtom,
+  tracksAtom,
+} from "@/atoms";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/ui/datepicker";
 import { Input } from "@/components/ui/input";
@@ -25,7 +36,6 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { useStore } from "@/store";
 import { getTrendingData } from "@/utils/analysis";
 
 import { columns as artistDistributionColumns } from "./analysis/columns/artist-distribution";
@@ -39,31 +49,29 @@ import { MostPlayed } from "./analysis/MostPlayed";
 import { Trending } from "./analysis/Trending";
 
 import type { TopTrack } from "@/types";
+import type { ColumnDef } from "@tanstack/react-table";
+import type { MostPlayedItem } from "./analysis/MostPlayed";
 
 export const Dashboard = () => {
-  const {
-    analysis,
-    tracks,
-    setDateRange,
-    setSortBy,
-    sortBy,
-    setGenreKey,
-    genreKey,
-    count,
-    setCount,
-    filter,
-    setFilter,
-    searchTerm,
-    setSearchTerm,
-  } = useStore();
+  const analysis = useAtomValue(analysisAtom);
+  const tracks = useAtomValue(tracksAtom);
+  const setStartDate = useSetAtom(startDateAtom);
+  const setEndDate = useSetAtom(endDateAtom);
+  const [sortBy, setSortBy] = useAtom(sortByAtom);
+  const [genreKey, setGenreKey] = useAtom(genreKeyAtom);
+  const [count, setCount] = useAtom(countAtom);
+  const [filter, setFilter] = useAtom(filterAtom);
+  const [searchTerm, setSearchTerm] = useAtom(searchTermAtom);
+
   const [activeTab, setActiveTab] = useAtom(activeTabAtom);
-  const [startDate, setStartDate] = useState<Date | undefined>();
-  const [endDate, setEndDate] = useState<Date | undefined>();
+  const [startDateValue, setStartDateValue] = useState<Date | undefined>();
+  const [endDateValue, setEndDateValue] = useState<Date | undefined>();
   const [trendingType, setTrendingType] = useState<"artist" | "album">("artist");
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const handleDateRangeChange = () => {
-    setDateRange(startDate?.toISOString(), endDate?.toISOString());
+    setStartDate(startDateValue?.toISOString());
+    setEndDate(endDateValue?.toISOString());
   };
 
   const trendingData = useMemo(() => {
@@ -75,7 +83,7 @@ export const Dashboard = () => {
       value: "most-played-tracks",
       icon: Music,
       label: "Most Played Tracks",
-      data: analysis.mostPlayedTracks,
+      data: analysis?.mostPlayedTracks,
       columns: tracksColumns,
       getLabel: (item: TopTrack) => `${item.name} by ${item.artist}`,
     },
@@ -83,25 +91,25 @@ export const Dashboard = () => {
       value: "most-played-artists",
       icon: Mic,
       label: "Most Played Artists",
-      data: analysis.mostPlayedArtists,
+      data: analysis?.mostPlayedArtists,
       columns: artistsColumns,
-      getLabel: (item: any) => item.name,
+      getLabel: (item: { name: string }) => item.name,
     },
     {
       value: "most-played-albums",
       icon: Disc,
       label: "Most Played Albums",
-      data: analysis.mostPlayedAlbums,
+      data: analysis?.mostPlayedAlbums,
       columns: albumsColumns,
-      getLabel: (item: any) => item.name,
+      getLabel: (item: { name: string }) => item.name,
     },
     {
       value: "most-played-genres",
       icon: BarChart,
       label: "Most Played Genres",
-      data: analysis.mostPlayedGenres,
+      data: analysis?.mostPlayedGenres,
       columns: genresColumns,
-      getLabel: (item: any) => item.name,
+      getLabel: (item: { name: string }) => item.name,
     },
   ];
 
@@ -130,8 +138,12 @@ export const Dashboard = () => {
         <div className={cn("mt-4", isSidebarCollapsed && "hidden")}>
           <h2 className="mb-2 text-lg font-bold">Date Range</h2>
           <div className="flex flex-col space-y-2">
-            <DatePicker date={startDate} setDate={setStartDate} placeholder="Start Date" />
-            <DatePicker date={endDate} setDate={setEndDate} placeholder="End Date" />
+            <DatePicker
+              date={startDateValue}
+              setDate={setStartDateValue}
+              placeholder="Start Date"
+            />
+            <DatePicker date={endDateValue} setDate={setEndDateValue} placeholder="End Date" />
             <Button onClick={handleDateRangeChange}>Apply</Button>
           </div>
         </div>
@@ -242,10 +254,10 @@ export const Dashboard = () => {
           {mostPlayedTabs.map((tab) => (
             <TabsContent value={tab.value} key={tab.value}>
               <MostPlayed
-                items={tab.data.slice(0, count)}
+                items={tab.data?.slice(0, count) as MostPlayedItem[]}
                 sortBy={sortBy}
-                columns={tab.columns}
-                getLabel={tab.getLabel as any}
+                columns={tab.columns as ColumnDef<MostPlayedItem, unknown>[]}
+                getLabel={tab.getLabel as (item: MostPlayedItem) => string}
               />
             </TabsContent>
           ))}

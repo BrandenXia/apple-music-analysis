@@ -1,8 +1,8 @@
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useRef } from "react";
 import { Pie, PieChart, ResponsiveContainer } from "recharts";
 
-import { activeTabAtom } from "@/atoms";
+import { activeTabAtom, filterAtom } from "@/atoms";
 import {
   ChartContainer,
   ChartLegend,
@@ -11,12 +11,11 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { DataTable } from "@/components/ui/data-table";
-import { useStore } from "@/store";
-import { type ColumnDef } from "@tanstack/react-table";
 
 import { ExportButton } from "../ExportButton";
 
 import type { ChartConfig } from "@/components/ui/chart";
+import type { ColumnDef } from "@tanstack/react-table";
 
 interface Props {
   data: { name: string; count: number }[];
@@ -33,8 +32,8 @@ export const DistributionChart = ({
   fileName,
   hideTooltipLabel,
 }: Props) => {
-  const { setFilter, filter } = useStore();
-  const [, setActiveTab] = useAtom(activeTabAtom);
+  const [filter, setFilter] = useAtom(filterAtom);
+  const setActiveTab = useSetAtom(activeTabAtom);
   const exportRef = useRef<HTMLDivElement>(null!);
 
   const chartData = data.map((d, idx) => ({
