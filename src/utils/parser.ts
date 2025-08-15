@@ -3,18 +3,21 @@ import type { Track } from "../types";
 export const parse = (xml: string): Track[] => {
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(xml, "text/xml");
-  const trackDicts = xmlDoc.getElementsByTagName("dict")[0].getElementsByTagName("dict")[0].getElementsByTagName("dict");
+  const trackDicts = xmlDoc
+    .getElementsByTagName("dict")[0]
+    .getElementsByTagName("dict")[0]
+    .getElementsByTagName("dict");
 
   const tracks: Track[] = [];
 
   for (let i = 0; i < trackDicts.length; i++) {
-    const trackData: any = {};
+    const trackData: Record<string, string> = {};
     const keys = trackDicts[i].getElementsByTagName("key");
     const values = trackDicts[i].children;
 
-    for (let j = 0; j < keys.length; j++) {
-      trackData[keys[j].textContent as any] = values[j * 2 + 1].textContent;
-    }
+    for (let j = 0; j < keys.length; j++)
+      trackData[keys[j].textContent as string] = values[j * 2 + 1]
+        .textContent as string;
 
     tracks.push({
       Name: trackData.Name,
@@ -31,3 +34,4 @@ export const parse = (xml: string): Track[] => {
 
   return tracks;
 };
+

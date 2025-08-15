@@ -1,8 +1,7 @@
 import { useMemo, useState } from "react";
 import { MostPlayed } from "./analysis/MostPlayed";
-import { GenreDistribution } from "./analysis/GenreDistribution";
-import { ArtistDistribution } from "./analysis/ArtistDistribution";
 import { Trending } from "./analysis/Trending";
+import { DistributionChart } from "./analysis/DistributionChart";
 import { getTrendingData } from "../utils/analysis";
 import { useStore } from "../store";
 import { Button } from "@/components/ui/button";
@@ -20,6 +19,8 @@ import { columns as tracksColumns } from "./analysis/most-played-tracks-columns"
 import { columns as artistsColumns } from "./analysis/most-played-artists-columns";
 import { columns as albumsColumns } from "./analysis/most-played-albums-columns";
 import { columns as genresColumns } from "./analysis/most-played-genres-columns";
+import { columns as artistDistributionColumns } from "./analysis/artist-distribution-columns";
+import { columns as genreDistributionColumns } from "./analysis/genre-distribution-columns";
 import {
   Music,
   Mic,
@@ -258,10 +259,21 @@ export const Dashboard = () => {
             />
           </TabsContent>
           <TabsContent value="genre-distribution">
-            <GenreDistribution genres={analysis.topThreeGenres} />
+            <DistributionChart
+              data={analysis.topThreeGenres}
+              columns={genreDistributionColumns}
+              filterType="genre"
+              fileName="genre-distribution"
+              hideTooltipLabel
+            />
           </TabsContent>
           <TabsContent value="artist-distribution">
-            <ArtistDistribution artists={analysis.topThreeArtists} />
+            <DistributionChart
+              data={analysis.topThreeArtists}
+              columns={artistDistributionColumns}
+              filterType="artist"
+              fileName="artist-distribution"
+            />
           </TabsContent>
           <TabsContent value="trending">
             <div>

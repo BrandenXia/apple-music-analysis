@@ -1,11 +1,11 @@
 import { Line, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import {
     ChartContainer,
-    ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart";
-import { ExportButton } from "../ExportButton";
 import { useRef } from 'react';
+import type { RefObject } from "react";
+import { ExportButton } from "../ExportButton";
 
 interface Props {
   data: {
@@ -48,7 +48,7 @@ export const Trending = ({ data }: Props) => {
         </ChartContainer>
       </div>
       <div className="mt-4 flex justify-end">
-        <ExportButton elementRef={exportRef} fileName="trending" />
+        <ExportButton elementRef={exportRef as RefObject<HTMLElement>} fileName="trending" />
       </div>
     </div>
   );

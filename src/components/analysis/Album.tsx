@@ -14,10 +14,16 @@ export const Album = ({ album }: Props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getAlbumImage(album.name, album.tracks[0]?.Artist).then(url => {
-      setImageUrl(url);
+    if (album.name && album.tracks[0]?.Artist) {
+      getAlbumImage(album.name, album.tracks[0]?.Artist).then((url) => {
+        if (typeof url === 'string') {
+          setImageUrl(url);
+        }
+        setLoading(false);
+      });
+    } else {
       setLoading(false);
-    });
+    }
   }, [album]);
 
   const toTitleCase = (str: string) => {

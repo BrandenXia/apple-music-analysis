@@ -4,15 +4,10 @@ import {
   CartesianGrid,
   XAxis,
   YAxis,
-  Tooltip,
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { formatDuration, intervalToDuration } from "date-fns";
 import { DataTable } from "@/components/ui/data-table";
 import type { ColumnDef } from "@tanstack/react-table";
@@ -26,16 +21,16 @@ import {
 import { Song } from "./Song";
 import { Artist } from "./Artist";
 import { Album } from "./Album";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import type { RefObject } from "react";
 import { ExportButton } from "../ExportButton";
-import { useRef } from "react";
 
 type MostPlayedItem = TopTrack | TopArtist | TopAlbum | TopGenre;
 
 interface Props<T extends MostPlayedItem> {
   items: T[];
   sortBy: "playCount" | "playTime";
-  columns: ColumnDef<T, any>[];
+  columns: ColumnDef<T, unknown>[];
   getLabel: (item: T) => string;
 }
 
@@ -125,7 +120,10 @@ export const MostPlayed = <T extends MostPlayedItem>({
         </div>
       </div>
       <div className="mt-4 flex justify-end">
-        <ExportButton elementRef={exportRef} fileName="most-played" />
+        <ExportButton
+          elementRef={exportRef as RefObject<HTMLElement>}
+          fileName="most-played"
+        />
       </div>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
@@ -148,4 +146,3 @@ export const MostPlayed = <T extends MostPlayedItem>({
     </Dialog>
   );
 };
-

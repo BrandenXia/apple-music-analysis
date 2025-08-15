@@ -14,11 +14,8 @@ function escapeLucene(value: string) {
 
 async function getCoverArtUrl(mbid: string) {
   try {
-    const response = await caApi.getReleaseCover(mbid, "front");
-    if (response.ok) {
-      return response.url;
-    }
-    return undefined;
+    const url = await caApi.getReleaseCover(mbid, "front");
+    return url;
   } catch (error) {
     if (error instanceof Response && error.status === 404) {
       return undefined;
@@ -31,7 +28,9 @@ async function getCoverArtUrl(mbid: string) {
 export async function getTrackImage(trackName: string, artistName: string) {
   try {
     const result = await mbApi.search("recording", {
-      query: `recording:"${escapeLucene(trackName)}" AND artist:"${escapeLucene(artistName)}"`,
+      query: `recording:"${escapeLucene(trackName)}" AND artist:"${escapeLucene(
+        artistName,
+      )}"`, 
     });
     const release = result.recordings?.[0]?.releases?.[0];
     if (release?.id) {
@@ -43,14 +42,16 @@ export async function getTrackImage(trackName: string, artistName: string) {
   return undefined;
 }
 
-export async function getArtistImage(artistName: string) {
+export async function getArtistImage() {
   return undefined;
 }
 
 export async function getAlbumImage(albumName: string, artistName: string) {
   try {
     const result = await mbApi.search("release", {
-      query: `release:"${escapeLucene(albumName)}" AND artist:"${escapeLucene(artistName)}"`,
+      query: `release:"${escapeLucene(albumName)}" AND artist:"${escapeLucene(
+        artistName,
+      )}"`, 
     });
     const release = result.releases?.[0];
     if (release?.id) {
@@ -61,3 +62,4 @@ export async function getAlbumImage(albumName: string, artistName: string) {
   }
   return undefined;
 }
+
