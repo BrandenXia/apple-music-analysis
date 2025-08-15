@@ -1,4 +1,4 @@
-import type { Track } from "../types";
+import type { Track } from "@/types";
 
 export const parse = (xml: string): Track[] => {
   const parser = new DOMParser();
@@ -16,8 +16,7 @@ export const parse = (xml: string): Track[] => {
     const values = trackDicts[i].children;
 
     for (let j = 0; j < keys.length; j++)
-      trackData[keys[j].textContent as string] = values[j * 2 + 1]
-        .textContent as string;
+      trackData[keys[j].textContent as string] = values[j * 2 + 1].textContent as string;
 
     tracks.push({
       Name: trackData.Name,
@@ -34,4 +33,3 @@ export const parse = (xml: string): Track[] => {
 
   return tracks;
 };
-

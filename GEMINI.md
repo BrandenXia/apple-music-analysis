@@ -23,7 +23,7 @@ The project uses ESLint for linting. The configuration is in `eslint.config.js`.
 
 The web application is structured with a clear separation of concerns:
 
-*   `src/components`: React components
-*   `src/utils`: Utility functions for parsing and analysis
-*   `src/store.ts`: Zustand store for state management
-*   `src/types`: TypeScript type definitions
+- `src/components`: React components
+- `src/utils`: Utility functions for parsing and analysis
+- `src/store.ts`: Zustand store for state management
+- `src/types`: TypeScript type definitions

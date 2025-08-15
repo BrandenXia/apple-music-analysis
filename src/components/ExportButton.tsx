@@ -1,6 +1,7 @@
-import { Button } from "@/components/ui/button";
 import html2canvas from "html2canvas-pro";
 import { Download } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 
 interface Props {
   elementRef: React.RefObject<HTMLElement>;

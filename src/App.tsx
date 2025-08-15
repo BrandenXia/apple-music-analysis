@@ -1,5 +1,5 @@
-import { FileUploader } from "./components/FileUploader";
 import { Dashboard } from "./components/Dashboard";
+import { FileUploader } from "./components/FileUploader";
 import { useStore } from "./store";
 import { parse } from "./utils/parser";
 

@@ -1,10 +1,21 @@
+import { useAtom } from "jotai";
+import {
+  BarChart,
+  Disc,
+  LineChart,
+  Mic,
+  Music,
+  PanelLeft,
+  PieChart,
+  TrendingUp,
+  X,
+} from "lucide-react";
 import { useMemo, useState } from "react";
-import { MostPlayed } from "./analysis/MostPlayed";
-import { Trending } from "./analysis/Trending";
-import { DistributionChart } from "./analysis/DistributionChart";
-import { getTrendingData } from "../utils/analysis";
-import { useStore } from "../store";
+
+import { activeTabAtom } from "@/atoms";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/datepicker";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -13,28 +24,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DatePicker } from "@/components/ui/datepicker";
-import { Input } from "@/components/ui/input";
-import { columns as tracksColumns } from "./analysis/most-played-tracks-columns";
-import { columns as artistsColumns } from "./analysis/most-played-artists-columns";
-import { columns as albumsColumns } from "./analysis/most-played-albums-columns";
-import { columns as genresColumns } from "./analysis/most-played-genres-columns";
-import { columns as artistDistributionColumns } from "./analysis/artist-distribution-columns";
-import { columns as genreDistributionColumns } from "./analysis/genre-distribution-columns";
-import {
-  Music,
-  Mic,
-  Disc,
-  BarChart,
-  PieChart,
-  LineChart,
-  TrendingUp,
-  PanelLeft,
-  X,
-} from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useAtom } from "jotai";
-import { activeTabAtom } from "@/atoms";
+import { useStore } from "@/store";
+import { getTrendingData } from "@/utils/analysis";
+
+import { columns as artistDistributionColumns } from "./analysis/artist-distribution-columns";
+import { DistributionChart } from "./analysis/DistributionChart";
+import { columns as genreDistributionColumns } from "./analysis/genre-distribution-columns";
+import { columns as albumsColumns } from "./analysis/most-played-albums-columns";
+import { columns as artistsColumns } from "./analysis/most-played-artists-columns";
+import { columns as genresColumns } from "./analysis/most-played-genres-columns";
+import { columns as tracksColumns } from "./analysis/most-played-tracks-columns";
+import { MostPlayed } from "./analysis/MostPlayed";
+import { Trending } from "./analysis/Trending";
+
 import type { TopTrack } from "@/types";
 
 export const Dashboard = () => {
@@ -56,9 +59,7 @@ export const Dashboard = () => {
   const [activeTab, setActiveTab] = useAtom(activeTabAtom);
   const [startDate, setStartDate] = useState<Date | undefined>();
   const [endDate, setEndDate] = useState<Date | undefined>();
-  const [trendingType, setTrendingType] = useState<"artist" | "album">(
-    "artist",
-  );
+  const [trendingType, setTrendingType] = useState<"artist" | "album">("artist");
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const handleDateRangeChange = () => {
@@ -77,14 +78,12 @@ export const Dashboard = () => {
     <div className="flex h-screen">
       <div
         className={cn(
-          "bg-sidebar text-sidebar-foreground p-4 overflow-y-auto transition-all duration-300",
+          "bg-sidebar text-sidebar-foreground overflow-y-auto p-4 transition-all duration-300",
           isSidebarCollapsed ? "w-16" : "w-64",
         )}
       >
         <div className="flex items-center justify-between">
-          {!isSidebarCollapsed && (
-            <h1 className="text-2xl font-bold">Analysis</h1>
-          )}
+          {!isSidebarCollapsed && <h1 className="text-2xl font-bold">Analysis</h1>}
           <Button
             variant="ghost"
             size="icon"
@@ -94,23 +93,15 @@ export const Dashboard = () => {
           </Button>
         </div>
         <div className={cn("mt-4", isSidebarCollapsed && "hidden")}>
-          <h2 className="text-lg font-bold mb-2">Date Range</h2>
+          <h2 className="mb-2 text-lg font-bold">Date Range</h2>
           <div className="flex flex-col space-y-2">
-            <DatePicker
-              date={startDate}
-              setDate={setStartDate}
-              placeholder="Start Date"
-            />
-            <DatePicker
-              date={endDate}
-              setDate={setEndDate}
-              placeholder="End Date"
-            />
+            <DatePicker date={startDate} setDate={setStartDate} placeholder="Start Date" />
+            <DatePicker date={endDate} setDate={setEndDate} placeholder="End Date" />
             <Button onClick={handleDateRangeChange}>Apply</Button>
           </div>
         </div>
         <div className={cn("mt-4", isSidebarCollapsed && "hidden")}>
-          <h2 className="text-lg font-bold mb-2">Genre Source</h2>
+          <h2 className="mb-2 text-lg font-bold">Genre Source</h2>
           <Select
             onValueChange={(value: "Grouping" | "Genre") => setGenreKey(value)}
             defaultValue={genreKey}
@@ -125,9 +116,9 @@ export const Dashboard = () => {
           </Select>
         </div>
       </div>
-      <div className="flex-1 p-8 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto p-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="flex flex-wrap h-auto w-full">
+          <TabsList className="flex h-auto w-full flex-wrap">
             <TabsTrigger value="most-played-tracks">
               <Music className="mr-1" />
               Most Played Tracks
@@ -157,8 +148,8 @@ export const Dashboard = () => {
               Trending
             </TabsTrigger>
           </TabsList>
-          <div className="flex justify-between items-center my-4">
-            <div className="flex items-center space-x-4 flex-nowrap">
+          <div className="my-4 flex items-center justify-between">
+            <div className="flex flex-nowrap items-center space-x-4">
               {activeTab.startsWith("most-played") && (
                 <Input
                   placeholder="Search..."
@@ -167,8 +158,7 @@ export const Dashboard = () => {
                   className="max-w-sm"
                 />
               )}
-              {(activeTab.startsWith("most-played") ||
-                activeTab.endsWith("-distribution")) && (
+              {(activeTab.startsWith("most-played") || activeTab.endsWith("-distribution")) && (
                 <div className="flex items-center space-x-2">
                   <label htmlFor="count" className="whitespace-nowrap">
                     Show top
@@ -195,9 +185,7 @@ export const Dashboard = () => {
                     Sort by
                   </label>
                   <Select
-                    onValueChange={(value: "playCount" | "playTime") =>
-                      setSortBy(value)
-                    }
+                    onValueChange={(value: "playCount" | "playTime") => setSortBy(value)}
                     defaultValue={sortBy}
                   >
                     <SelectTrigger id="sort-by" className="w-[120px]">
@@ -277,14 +265,12 @@ export const Dashboard = () => {
           </TabsContent>
           <TabsContent value="trending">
             <div>
-              <div className="flex items-center mb-4">
+              <div className="mb-4 flex items-center">
                 <label htmlFor="trending-type" className="mr-2">
                   Analyze by
                 </label>
                 <Select
-                  onValueChange={(value: "artist" | "album") =>
-                    setTrendingType(value)
-                  }
+                  onValueChange={(value: "artist" | "album") => setTrendingType(value)}
                   defaultValue={trendingType}
                 >
                   <SelectTrigger id="trending-type" className="w-[180px]">
@@ -304,4 +290,3 @@ export const Dashboard = () => {
     </div>
   );
 };
-

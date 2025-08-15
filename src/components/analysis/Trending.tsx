@@ -1,11 +1,20 @@
-import { Line, LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { useRef } from "react";
 import {
-    ChartContainer,
-    ChartTooltipContent,
-} from "@/components/ui/chart";
-import { useRef } from 'react';
-import type { RefObject } from "react";
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+
+import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
+
 import { ExportButton } from "../ExportButton";
+
+import type { RefObject } from "react";
 
 interface Props {
   data: {
@@ -23,8 +32,8 @@ export const Trending = ({ data }: Props) => {
 
   const chartData = data.labels.map((label, index) => {
     const entry: { [key: string]: string | number } = { name: label };
-    data.datasets.forEach(dataset => {
-        entry[dataset.label] = dataset.data[index];
+    data.datasets.forEach((dataset) => {
+      entry[dataset.label] = dataset.data[index];
     });
     return entry;
   });
@@ -33,18 +42,24 @@ export const Trending = ({ data }: Props) => {
     <div>
       <div ref={exportRef}>
         <ChartContainer config={{}} className="min-h-[200px] w-full">
-            <ResponsiveContainer width="100%" height={300}>
-                <LineChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip content={<ChartTooltipContent />} />
-                    <Legend />
-                    {data.datasets.map(dataset => (
-                        <Line key={dataset.label} type="monotone" dataKey={dataset.label} stroke={dataset.borderColor} strokeWidth={2} />
-                    ))}
-                </LineChart>
-            </ResponsiveContainer>
+          <ResponsiveContainer width="100%" height={300}>
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip content={<ChartTooltipContent />} />
+              <Legend />
+              {data.datasets.map((dataset) => (
+                <Line
+                  key={dataset.label}
+                  type="monotone"
+                  dataKey={dataset.label}
+                  stroke={dataset.borderColor}
+                  strokeWidth={2}
+                />
+              ))}
+            </LineChart>
+          </ResponsiveContainer>
         </ChartContainer>
       </div>
       <div className="mt-4 flex justify-end">

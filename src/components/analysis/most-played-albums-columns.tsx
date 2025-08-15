@@ -1,8 +1,9 @@
-"use client"
+"use client";
 
-import type { ColumnDef } from "@tanstack/react-table"
-import type { TopAlbum } from "@/types"
-import { formatDuration, intervalToDuration } from "date-fns"
+import { formatDuration, intervalToDuration } from "date-fns";
+
+import type { TopAlbum } from "@/types";
+import type { ColumnDef } from "@tanstack/react-table";
 
 export const columns: ColumnDef<TopAlbum>[] = [
   {
@@ -11,7 +12,7 @@ export const columns: ColumnDef<TopAlbum>[] = [
   },
   {
     header: "Artist",
-    accessorFn: row => row.tracks[0]?.Artist || "N/A",
+    accessorFn: (row) => row.tracks[0]?.Artist || "N/A",
   },
   {
     accessorKey: "playCount",
@@ -20,6 +21,6 @@ export const columns: ColumnDef<TopAlbum>[] = [
   {
     accessorKey: "playTime",
     header: "Play Time",
-    cell: ({ row }) => formatDuration(intervalToDuration({ start: 0, end: row.original.playTime }))
+    cell: ({ row }) => formatDuration(intervalToDuration({ start: 0, end: row.original.playTime })),
   },
-]
+];

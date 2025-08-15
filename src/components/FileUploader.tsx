@@ -1,8 +1,8 @@
-
 import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 interface Props {
   onFileUploaded: (file: File) => void;
@@ -24,7 +24,7 @@ export const FileUploader = ({ onFileUploaded }: Props) => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex h-screen flex-col items-center justify-center">
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>Apple Music Analysis</CardTitle>
@@ -35,7 +35,9 @@ export const FileUploader = ({ onFileUploaded }: Props) => {
             <div className="flex flex-col space-y-1.5">
               <Input id="picture" type="file" onChange={handleFileChange} />
             </div>
-            <Button onClick={handleUpload} disabled={!file}>Analyze</Button>
+            <Button onClick={handleUpload} disabled={!file}>
+              Analyze
+            </Button>
           </div>
         </CardContent>
       </Card>

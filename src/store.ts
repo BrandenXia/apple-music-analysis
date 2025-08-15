@@ -1,6 +1,8 @@
 import { create } from "zustand";
-import type { Track, Analysis } from "./types";
+
 import { analyze } from "./utils/analysis";
+
+import type { Analysis, Track } from "./types";
 
 interface State {
   tracks: Track[];
@@ -10,7 +12,7 @@ interface State {
   sortBy: "playCount" | "playTime";
   genreKey: "Grouping" | "Genre";
   count: number;
-  filter: { type: 'genre' | 'artist' | null; value: string | null };
+  filter: { type: "genre" | "artist" | null; value: string | null };
   searchTerm: string;
 }
 
@@ -20,7 +22,7 @@ interface Actions {
   setSortBy: (sortBy: "playCount" | "playTime") => void;
   setGenreKey: (genreKey: "Grouping" | "Genre") => void;
   setCount: (count: number) => void;
-  setFilter: (filter: { type: 'genre' | 'artist' | null; value: string | null }) => void;
+  setFilter: (filter: { type: "genre" | "artist" | null; value: string | null }) => void;
   setSearchTerm: (searchTerm: string) => void;
 }
 

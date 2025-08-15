@@ -1,3 +1,3 @@
-import { atom } from 'jotai'
+import { atom } from "jotai";
 
-export const activeTabAtom = atom('most-played-tracks')
+export const activeTabAtom = atom("most-played-tracks");

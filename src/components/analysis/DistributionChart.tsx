@@ -1,19 +1,22 @@
+import { useAtom } from "jotai";
+import { useRef } from "react";
 import { Pie, PieChart, ResponsiveContainer } from "recharts";
+
+import { activeTabAtom } from "@/atoms";
 import {
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
 } from "@/components/ui/chart";
 import { DataTable } from "@/components/ui/data-table";
 import { useStore } from "@/store";
-import { useAtom } from "jotai";
-import { activeTabAtom } from "@/atoms";
-import { ExportButton } from "../ExportButton";
-import { useRef } from "react";
-import type { ChartConfig } from "@/components/ui/chart";
 import { type ColumnDef } from "@tanstack/react-table";
+
+import { ExportButton } from "../ExportButton";
+
+import type { ChartConfig } from "@/components/ui/chart";
 
 interface Props {
   data: { name: string; count: number }[];
@@ -67,22 +70,15 @@ export const DistributionChart = ({
       <div ref={exportRef}>
         <ChartContainer
           config={chartConfig}
-          className="min-h-[200px] w-full [&_.recharts-pie-label-text]:fill-foreground"
+          className="[&_.recharts-pie-label-text]:fill-foreground min-h-[200px] w-full"
         >
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
-              <ChartTooltip
-                content={<ChartTooltipContent hideLabel={hideTooltipLabel} />}
-              />
-              <Pie
-                data={chartData}
-                dataKey="value"
-                onClick={handleClick}
-                label
-              />
+              <ChartTooltip content={<ChartTooltipContent hideLabel={hideTooltipLabel} />} />
+              <Pie data={chartData} dataKey="value" onClick={handleClick} label />
               <ChartLegend
                 content={<ChartLegendContent nameKey="name" />}
-                className="-translate-y-2 flex-wrap gap-x-6 gap-y-3 max-w-2/3 *:justify-center mx-auto"
+                className="mx-auto max-w-2/3 -translate-y-2 flex-wrap gap-x-6 gap-y-3 *:justify-center"
               />
             </PieChart>
           </ResponsiveContainer>

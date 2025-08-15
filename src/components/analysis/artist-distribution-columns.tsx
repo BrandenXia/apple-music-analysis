@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import type { ColumnDef } from "@tanstack/react-table"
+import type { ColumnDef } from "@tanstack/react-table";
 
 export const columns: ColumnDef<{ name: string; count: number }>[] = [
   {
@@ -11,4 +11,4 @@ export const columns: ColumnDef<{ name: string; count: number }>[] = [
     accessorKey: "count",
     header: "Song Count",
   },
-]
+];

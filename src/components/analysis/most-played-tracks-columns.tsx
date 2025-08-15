@@ -1,8 +1,9 @@
-"use client"
+"use client";
 
-import type { ColumnDef } from "@tanstack/react-table"
-import type { TopTrack } from "@/types"
-import { formatDuration, intervalToDuration } from "date-fns"
+import { formatDuration, intervalToDuration } from "date-fns";
+
+import type { TopTrack } from "@/types";
+import type { ColumnDef } from "@tanstack/react-table";
 
 export const columns: ColumnDef<TopTrack>[] = [
   {
@@ -20,6 +21,6 @@ export const columns: ColumnDef<TopTrack>[] = [
   {
     accessorKey: "playTime",
     header: "Play Time",
-    cell: ({ row }) => formatDuration(intervalToDuration({ start: 0, end: row.original.playTime }))
+    cell: ({ row }) => formatDuration(intervalToDuration({ start: 0, end: row.original.playTime })),
   },
-]
+];
