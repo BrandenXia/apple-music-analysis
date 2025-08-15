@@ -1,10 +1,10 @@
 "use client"
 
-import { ColumnDef } from "@tanstack/react-table"
-import { TopTrack, TopArtist, TopAlbum, TopGenre } from "@/types"
+import type { ColumnDef } from "@tanstack/react-table"
+import type { TopTrack } from "@/types"
 import { formatDuration, intervalToDuration } from "date-fns"
 
-export const columns: ColumnDef<TopTrack | TopArtist | TopAlbum | TopGenre>[] = [
+export const columns: ColumnDef<TopTrack>[] = [
   {
     accessorKey: "name",
     header: "Name",
@@ -12,8 +12,6 @@ export const columns: ColumnDef<TopTrack | TopArtist | TopAlbum | TopGenre>[] = 
   {
     accessorKey: "artist",
     header: "Artist",
-    // @ts-ignore
-    cell: ({ row }) => row.original.artist || "N/A",
   },
   {
     accessorKey: "playCount",

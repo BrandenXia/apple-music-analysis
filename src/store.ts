@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Track, Analysis } from "./types";
+import type { Track, Analysis } from "./types";
 import { analyze } from "./utils/analysis";
 
 interface State {

@@ -1,7 +1,7 @@
 "use client"
 
-import { ColumnDef } from "@tanstack/react-table"
-import { TopGenre } from "@/types"
+import type { ColumnDef } from "@tanstack/react-table"
+import type { TopGenre } from "@/types"
 import { formatDuration, intervalToDuration } from "date-fns"
 
 export const columns: ColumnDef<TopGenre>[] = [

@@ -10,7 +10,8 @@ import {
 } from "chart.js";
 import { formatDuration, intervalToDuration } from "date-fns";
 import { DataTable } from "@/components/ui/data-table";
-import { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
+import type { TopTrack, TopArtist, TopAlbum, TopGenre } from "@/types";
 
 ChartJS.register(
     CategoryScale,
@@ -21,14 +22,16 @@ ChartJS.register(
     Legend
 );
 
-interface Props<T> {
+type MostPlayedItem = TopTrack | TopArtist | TopAlbum | TopGenre;
+
+interface Props<T extends MostPlayedItem> {
     items: T[];
     sortBy: "playCount" | "playTime";
     columns: ColumnDef<T, any>[];
     getLabel: (item: T) => string;
 }
 
-export const MostPlayed = <T extends { name: string, playCount: number, playTime: number }>({ items, sortBy, columns, getLabel }: Props<T>) => {
+export const MostPlayed = <T extends MostPlayedItem>({ items, sortBy, columns, getLabel }: Props<T>) => {
     const playCountDataset = {
         label: "Play Count",
         data: items.map(item => item.playCount),

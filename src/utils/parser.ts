@@ -1,5 +1,4 @@
-
-import { Track } from "../types";
+import type { Track } from "../types";
 
 export const parse = (xml: string): Track[] => {
   const parser = new DOMParser();

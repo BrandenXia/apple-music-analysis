@@ -1,5 +1,4 @@
-
-import { Track, Analysis, TopTrack, TopArtist, TopAlbum, TopGenre } from "../types";
+import type { Track, Analysis, TopTrack, TopArtist, TopAlbum, TopGenre } from "../types";
 import { formatDuration, intervalToDuration } from "date-fns";
 
 export const analyze = (tracks: Track[], startDate?: string, endDate?: string, sortBy: "playCount" | "playTime" = "playCount", genreKey: "Grouping" | "Genre" = "Grouping", count: number = 5, filter: { type: 'genre' | 'artist' | null; value: string | null } = { type: null, value: null }): Analysis => {

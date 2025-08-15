@@ -1,5 +1,6 @@
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import type { Chart } from "chart.js";
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "./artist-distribution-columns";
 import { useStore } from "@/store";
@@ -7,8 +8,9 @@ import { useRef } from "react";
 import { getElementAtEvent } from "react-chartjs-2";
 import { useAtom } from "jotai";
 import { activeTabAtom } from "@/atoms";
+import { legendSpacingPlugin } from "@/lib/chart-plugins";
 
-ChartJS.register(ArcElement, Tooltip, Legend);
+ChartJS.register(ArcElement, Tooltip, Legend, legendSpacingPlugin);
 
 interface Props {
   artists: { name: string; count: number }[];
@@ -17,7 +19,7 @@ interface Props {
 export const ArtistDistribution = ({ artists }: Props) => {
   const { setFilter, filter } = useStore();
   const [, setActiveTab] = useAtom(activeTabAtom);
-  const chartRef = useRef();
+  const chartRef = useRef<Chart<'pie', number[], string>>(null);
 
   const data = {
     labels: artists.map((a) => a.name),
@@ -47,7 +49,8 @@ export const ArtistDistribution = ({ artists }: Props) => {
   };
 
   const onClick = (event: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
-    const element = getElementAtEvent(chartRef.current!, event);
+    if (!chartRef.current) return;
+    const element = getElementAtEvent(chartRef.current, event);
     if (element.length > 0) {
       const { index } = element[0];
       const artist = artists[index].name;
