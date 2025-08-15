@@ -2,7 +2,7 @@
 import { Track, Analysis, TopTrack, TopArtist, TopAlbum, TopGenre } from "../types";
 import { formatDuration, intervalToDuration } from "date-fns";
 
-export const analyze = (tracks: Track[], startDate?: string, endDate?: string, sortBy: "playCount" | "playTime" = "playCount", genreKey: "Grouping" | "Genre" = "Grouping"): Analysis => {
+export const analyze = (tracks: Track[], startDate?: string, endDate?: string, sortBy: "playCount" | "playTime" = "playCount", genreKey: "Grouping" | "Genre" = "Grouping", count: number = 5): Analysis => {
   let filteredTracks = tracks;
   if (startDate && endDate) {
     filteredTracks = tracks.filter(track => {
@@ -16,8 +16,8 @@ export const analyze = (tracks: Track[], startDate?: string, endDate?: string, s
     mostPlayedArtists: getMostPlayedArtists(filteredTracks, 50, sortBy),
     mostPlayedAlbums: getMostPlayedAlbums(filteredTracks, 50, sortBy),
     mostPlayedGenres: getMostPlayedGenres(filteredTracks, 50, sortBy, genreKey),
-    topThreeGenres: getTopThreeGenres(filteredTracks, 3, genreKey),
-    topThreeArtists: getTopThreeArtists(filteredTracks, 3),
+    topThreeGenres: getTopThreeGenres(filteredTracks, count, genreKey),
+    topThreeArtists: getTopThreeArtists(filteredTracks, count),
     totalPlayCount: getTotalPlayCount(filteredTracks),
     totalTime: getTotalTime(filteredTracks),
   };
@@ -155,32 +155,60 @@ const getTotalTime = (tracks: Track[]): string => {
   return formatDuration(duration);
 };
 
-export const getTrendingData = (tracks: Track[], type: "artist" | "genre", name: string, genreKey: "Grouping" | "Genre" = "Grouping") => {
-    const filteredTracks = tracks.filter(track => {
-        if (type === "artist") {
-            return track.Artist === name;
+export const getTrendingData = (tracks: Track[], type: "artist" | "album") => {
+    // 1. Group tracks by month
+    const monthlyAdds: { [month: string]: { [name: string]: number } } = {};
+
+    tracks.forEach(track => {
+        const month = new Date(track["Date Added"]).toLocaleString('default', { month: 'short', year: 'numeric' });
+        const name = type === 'artist' ? track.Artist : track.Album;
+
+        if (!name) return;
+
+        if (!monthlyAdds[month]) {
+            monthlyAdds[month] = {};
         }
-        const genreSource = track[genreKey] || (genreKey === 'Grouping' ? track.Genre : undefined);
-        return genreSource?.includes(name);
+        if (!monthlyAdds[month][name]) {
+            monthlyAdds[month][name] = 0;
+        }
+        monthlyAdds[month][name]++;
     });
 
-    const monthlyCounts = filteredTracks.reduce((acc, track) => {
-        const month = new Date(track["Date Added"]).toLocaleString('default', { month: 'long', year: 'numeric' });
-        acc[month] = (acc[month] || 0) + 1;
-        return acc;
-    }, {} as { [key: string]: number });
+    // 2. Find top 5 entities (artists or albums) overall
+    const totalCounts: { [name: string]: number } = {};
+    Object.values(monthlyAdds).forEach(monthData => {
+        Object.entries(monthData).forEach(([name, count]) => {
+            if (!totalCounts[name]) {
+                totalCounts[name] = 0;
+            }
+            totalCounts[name] += count;
+        });
+    });
 
-    const labels = Object.keys(monthlyCounts).sort((a,b) => new Date(a).getTime() - new Date(b).getTime());
+    const top5Names = Object.entries(totalCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(entry => entry[0]);
+
+    // 3. Prepare chart data
+    const labels = Object.keys(monthlyAdds).sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+
+    const datasets = top5Names.map(name => {
+        const data = labels.map(label => monthlyAdds[label][name] || 0);
+        // Generate a random color for the line
+        const r = Math.floor(Math.random() * 255);
+        const g = Math.floor(Math.random() * 255);
+        const b = Math.floor(Math.random() * 255);
+        return {
+            label: name,
+            data: data,
+            borderColor: `rgb(${r}, ${g}, ${b})`,
+            backgroundColor: `rgba(${r}, ${g}, ${b}, 0.5)`,
+        };
+    });
 
     return {
         labels,
-        datasets: [
-            {
-                label: name,
-                data: labels.map(label => monthlyCounts[label]),
-                borderColor: 'rgb(75, 192, 192)',
-                backgroundColor: 'rgba(75, 192, 192, 0.5)',
-            }
-        ]
-    }
+        datasets,
+    };
 }

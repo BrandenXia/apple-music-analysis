@@ -1,38 +1,65 @@
+import { create } from "zustand";
+import { Track, Analysis } from "./types";
+import { analyze } from "./utils/analysis";
 
-import { create } from 'zustand';
-import { Analysis, Track } from './types';
-import { analyze } from './utils/analysis';
-
-interface AppState {
+interface State {
   tracks: Track[];
   analysis: Analysis | null;
-  sortBy: 'playCount' | 'playTime';
-  genreKey: 'Grouping' | 'Genre';
-  setTracks: (tracks: Track[]) => void;
-  setSortBy: (sortBy: 'playCount' | 'playTime') => void;
-  setDateRange: (startDate: string, endDate: string) => void;
-  setGenreKey: (genreKey: 'Grouping' | 'Genre') => void;
+  startDate?: string;
+  endDate?: string;
+  sortBy: "playCount" | "playTime";
+  genreKey: "Grouping" | "Genre";
+  count: number;
 }
 
-export const useStore = create<AppState>((set, get) => ({
+interface Actions {
+  setTracks: (tracks: Track[]) => void;
+  setDateRange: (startDate?: string, endDate?: string) => void;
+  setSortBy: (sortBy: "playCount" | "playTime") => void;
+  setGenreKey: (genreKey: "Grouping" | "Genre") => void;
+  setCount: (count: number) => void;
+}
+
+export const useStore = create<State & Actions>((set, get) => ({
   tracks: [],
   analysis: null,
-  sortBy: 'playCount',
-  genreKey: 'Grouping',
+  sortBy: "playCount",
+  genreKey: "Grouping",
+  count: 5,
   setTracks: (tracks) => {
-    const analysis = analyze(tracks, undefined, undefined, get().sortBy, get().genreKey);
-    set({ tracks, analysis });
-  },
-  setSortBy: (sortBy) => {
-    const analysis = analyze(get().tracks, undefined, undefined, sortBy, get().genreKey);
-    set({ sortBy, analysis });
+    const { startDate, endDate, sortBy, genreKey, count } = get();
+    set({
+      tracks,
+      analysis: analyze(tracks, startDate, endDate, sortBy, genreKey, count),
+    });
   },
   setDateRange: (startDate, endDate) => {
-    const analysis = analyze(get().tracks, startDate, endDate, get().sortBy, get().genreKey);
-    set({ analysis });
+    const { tracks, sortBy, genreKey, count } = get();
+    set({
+      startDate,
+      endDate,
+      analysis: analyze(tracks, startDate, endDate, sortBy, genreKey, count),
+    });
+  },
+  setSortBy: (sortBy) => {
+    const { tracks, startDate, endDate, genreKey, count } = get();
+    set({
+      sortBy,
+      analysis: analyze(tracks, startDate, endDate, sortBy, genreKey, count),
+    });
   },
   setGenreKey: (genreKey) => {
-    const analysis = analyze(get().tracks, undefined, undefined, get().sortBy, genreKey);
-    set({ genreKey, analysis });
-  }
+    const { tracks, startDate, endDate, sortBy, count } = get();
+    set({
+      genreKey,
+      analysis: analyze(tracks, startDate, endDate, sortBy, genreKey, count),
+    });
+  },
+  setCount: (count) => {
+    const { tracks, startDate, endDate, sortBy, genreKey } = get();
+    set({
+      count,
+      analysis: analyze(tracks, startDate, endDate, sortBy, genreKey, count),
+    });
+  },
 }));
