@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
 import { activeTabAtom, countAtom, filterAtom } from "@/atoms";
-import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { DataTable } from "@/components/ui/data-table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { formatTimeDuration } from "@/lib/utils";
@@ -67,22 +67,12 @@ export const MostPlayed = <T extends MostPlayedItem>({
   const bars =
     sortBy === "playTime"
       ? [
-          <Bar
-            key="playTime"
-            dataKey="playTime"
-            fill="var(--color-chart-2)"
-            name="Play Time (hours)"
-          />,
+          <Bar key="playTime" dataKey="playTime" fill="var(--color-chart-2)" name="Play Time" />,
           <Bar key="playCount" dataKey="playCount" fill="var(--color-chart-1)" name="Play Count" />,
         ]
       : [
           <Bar key="playCount" dataKey="playCount" fill="var(--color-chart-1)" name="Play Count" />,
-          <Bar
-            key="playTime"
-            dataKey="playTime"
-            fill="var(--color-chart-2)"
-            name="Play Time (hours)"
-          />,
+          <Bar key="playTime" dataKey="playTime" fill="var(--color-chart-2)" name="Play Time" />,
         ];
 
   return (
@@ -101,12 +91,15 @@ export const MostPlayed = <T extends MostPlayedItem>({
               <XAxis type="number" />
               <YAxis dataKey="name" type="category" width={120} tick={{ fontSize: 12 }} />
               <ChartTooltip
-                formatter={(value, name) => {
-                  if (name === "Play Time (hours)") {
-                    return formatTimeDuration((value as number) * 60 * 60 * 1000);
-                  }
-                  return value.toString();
-                }}
+                content={
+                  <ChartTooltipContent
+                    valueFormatter={(value, name) =>
+                      name === "Play Time"
+                        ? formatTimeDuration((value as number) * 60 * 60 * 1000)
+                        : value.toString()
+                    }
+                  />
+                }
               />
               <Legend />
               {bars}

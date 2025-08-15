@@ -11,6 +11,8 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
+import { ModeToggle } from "./ModeToggle";
+
 interface SidebarProps {
   isSidebarCollapsed: boolean;
   setIsSidebarCollapsed: (collapsed: boolean) => void;
@@ -73,6 +75,9 @@ export const Sidebar = ({
             <SelectItem value="Genre">Genre</SelectItem>
           </SelectContent>
         </Select>
+      </div>
+      <div className="absolute bottom-4">
+        <ModeToggle />
       </div>
     </div>
   );
