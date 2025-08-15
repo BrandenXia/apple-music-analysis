@@ -65,7 +65,12 @@ export const MostPlayed = <T extends MostPlayedItem>({
       <div ref={exportRef}>
         <ChartContainer config={{}} className="min-h-[200px] w-full">
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={chartData} layout="vertical" margin={{ left: 120 }}>
+            <BarChart
+              data={chartData}
+              layout="vertical"
+              margin={{ left: 120 }}
+              onClick={(e) => e && setSelectedItem(items[e.activeTooltipIndex as number])}
+            >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis type="number" />
               <YAxis dataKey="name" type="category" width={120} tick={{ fontSize: 12 }} />
@@ -88,7 +93,7 @@ export const MostPlayed = <T extends MostPlayedItem>({
           </ResponsiveContainer>
         </ChartContainer>
         <div className="mt-4">
-          <DataTable columns={columns} data={items} />
+          <DataTable columns={columns} data={items} onRowClick={setSelectedItem} />
         </div>
       </div>
       <div className="mt-4 flex justify-end">
