@@ -33,6 +33,10 @@ The web application is structured with a clear separation of concerns:
 - `src/lib`: Utility functions for parsing, analysis, and other shared logic.
 - `src/types`: TypeScript type definitions.
 
+# Project Roadmap
+
+The planned features and improvements for this project are tracked in `TODO.md`.
+
 # Git Workflow
 
 After completing a feature, fix, or refactoring task, changes should be committed to Git before starting the next task. This ensures a clean and atomic commit history.
