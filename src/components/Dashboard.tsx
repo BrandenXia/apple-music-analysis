@@ -28,13 +28,13 @@ import { cn } from "@/lib/utils";
 import { useStore } from "@/store";
 import { getTrendingData } from "@/utils/analysis";
 
-import { columns as artistDistributionColumns } from "./analysis/artist-distribution-columns";
+import { columns as artistDistributionColumns } from "./analysis/columns/artist-distribution";
+import { columns as genreDistributionColumns } from "./analysis/columns/genre-distribution";
+import { columns as albumsColumns } from "./analysis/columns/most-played-albums";
+import { columns as artistsColumns } from "./analysis/columns/most-played-artists";
+import { columns as genresColumns } from "./analysis/columns/most-played-genres";
+import { columns as tracksColumns } from "./analysis/columns/most-played-tracks";
 import { DistributionChart } from "./analysis/DistributionChart";
-import { columns as genreDistributionColumns } from "./analysis/genre-distribution-columns";
-import { columns as albumsColumns } from "./analysis/most-played-albums-columns";
-import { columns as artistsColumns } from "./analysis/most-played-artists-columns";
-import { columns as genresColumns } from "./analysis/most-played-genres-columns";
-import { columns as tracksColumns } from "./analysis/most-played-tracks-columns";
 import { MostPlayed } from "./analysis/MostPlayed";
 import { Trending } from "./analysis/Trending";
 
@@ -69,6 +69,41 @@ export const Dashboard = () => {
   const trendingData = useMemo(() => {
     return getTrendingData(tracks, trendingType);
   }, [tracks, trendingType]);
+
+  const mostPlayedTabs = [
+    {
+      value: "most-played-tracks",
+      icon: Music,
+      label: "Most Played Tracks",
+      data: analysis.mostPlayedTracks,
+      columns: tracksColumns,
+      getLabel: (item: TopTrack) => `${item.name} by ${item.artist}`,
+    },
+    {
+      value: "most-played-artists",
+      icon: Mic,
+      label: "Most Played Artists",
+      data: analysis.mostPlayedArtists,
+      columns: artistsColumns,
+      getLabel: (item: any) => item.name,
+    },
+    {
+      value: "most-played-albums",
+      icon: Disc,
+      label: "Most Played Albums",
+      data: analysis.mostPlayedAlbums,
+      columns: albumsColumns,
+      getLabel: (item: any) => item.name,
+    },
+    {
+      value: "most-played-genres",
+      icon: BarChart,
+      label: "Most Played Genres",
+      data: analysis.mostPlayedGenres,
+      columns: genresColumns,
+      getLabel: (item: any) => item.name,
+    },
+  ];
 
   if (!analysis) {
     return <div>Loading...</div>;
@@ -119,22 +154,12 @@ export const Dashboard = () => {
       <div className="flex-1 overflow-y-auto p-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="flex h-auto w-full flex-wrap">
-            <TabsTrigger value="most-played-tracks">
-              <Music className="mr-1" />
-              Most Played Tracks
-            </TabsTrigger>
-            <TabsTrigger value="most-played-artists">
-              <Mic className="mr-1" />
-              Most Played Artists
-            </TabsTrigger>
-            <TabsTrigger value="most-played-albums">
-              <Disc className="mr-1" />
-              Most Played Albums
-            </TabsTrigger>
-            <TabsTrigger value="most-played-genres">
-              <BarChart className="mr-1" />
-              Most Played Genres
-            </TabsTrigger>
+            {mostPlayedTabs.map((tab) => (
+              <TabsTrigger value={tab.value} key={tab.value}>
+                <tab.icon className="mr-1" />
+                {tab.label}
+              </TabsTrigger>
+            ))}
             <TabsTrigger value="genre-distribution">
               <PieChart className="mr-1" />
               Genre Distribution
@@ -214,38 +239,16 @@ export const Dashboard = () => {
               </div>
             )}
           </div>
-          <TabsContent value="most-played-tracks">
-            <MostPlayed
-              items={analysis.mostPlayedTracks.slice(0, count)}
-              sortBy={sortBy}
-              columns={tracksColumns}
-              getLabel={(item: TopTrack) => `${item.name} by ${item.artist}`}
-            />
-          </TabsContent>
-          <TabsContent value="most-played-artists">
-            <MostPlayed
-              items={analysis.mostPlayedArtists.slice(0, count)}
-              sortBy={sortBy}
-              columns={artistsColumns}
-              getLabel={(item) => item.name}
-            />
-          </TabsContent>
-          <TabsContent value="most-played-albums">
-            <MostPlayed
-              items={analysis.mostPlayedAlbums.slice(0, count)}
-              sortBy={sortBy}
-              columns={albumsColumns}
-              getLabel={(item) => item.name}
-            />
-          </TabsContent>
-          <TabsContent value="most-played-genres">
-            <MostPlayed
-              items={analysis.mostPlayedGenres.slice(0, count)}
-              sortBy={sortBy}
-              columns={genresColumns}
-              getLabel={(item) => item.name}
-            />
-          </TabsContent>
+          {mostPlayedTabs.map((tab) => (
+            <TabsContent value={tab.value} key={tab.value}>
+              <MostPlayed
+                items={tab.data.slice(0, count)}
+                sortBy={sortBy}
+                columns={tab.columns}
+                getLabel={tab.getLabel as any}
+              />
+            </TabsContent>
+          ))}
           <TabsContent value="genre-distribution">
             <DistributionChart
               data={analysis.topThreeGenres}

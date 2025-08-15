@@ -1,6 +1,6 @@
 import { Mic } from "lucide-react";
 
-import { formatTimeDuration } from "@/lib/utils";
+import { formatTimeDuration, toTitleCase } from "@/lib/utils";
 
 import type { TopArtist } from "@/types";
 
@@ -9,12 +9,6 @@ interface Props {
 }
 
 export const Artist = ({ artist }: Props) => {
-  const toTitleCase = (str: string) => {
-    return str.replace(
-      /\w\S*/g,
-      (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(),
-    );
-  };
 
   const genres = [
     ...new Set(

@@ -2,13 +2,15 @@ import html2canvas from "html2canvas-pro";
 import { Download } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface Props {
   elementRef: React.RefObject<HTMLElement>;
   fileName: string;
+  className?: string;
 }
 
-export const ExportButton = ({ elementRef, fileName }: Props) => {
+export const ExportButton = ({ elementRef, fileName, className }: Props) => {
   const handleExport = () => {
     if (elementRef.current) {
       html2canvas(elementRef.current).then((canvas) => {
@@ -21,7 +23,7 @@ export const ExportButton = ({ elementRef, fileName }: Props) => {
   };
 
   return (
-    <Button onClick={handleExport} variant="outline" size="icon">
+    <Button onClick={handleExport} variant="outline" size="icon" className={cn(className)}>
       <Download className="h-4 w-4" />
     </Button>
   );

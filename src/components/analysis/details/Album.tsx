@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { getAlbumImage } from "@/lib/musicbrainz";
-import { formatTimeDuration } from "@/lib/utils";
+import { formatTimeDuration, toTitleCase } from "@/lib/utils";
 
 import type { TopAlbum } from "@/types";
 
@@ -27,13 +27,6 @@ export const Album = ({ album }: Props) => {
       setLoading(false);
     }
   }, [album]);
-
-  const toTitleCase = (str: string) => {
-    return str.replace(
-      /\w\S*/g,
-      (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(),
-    );
-  };
 
   const genres = [
     ...new Set(

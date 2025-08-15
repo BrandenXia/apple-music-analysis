@@ -7,9 +7,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { formatTimeDuration } from "@/lib/utils";
 
 import { ExportButton } from "../ExportButton";
-import { Album } from "./Album";
-import { Artist } from "./Artist";
-import { Song } from "./Song";
+import { Album } from "./details/Album";
+import { Artist } from "./details/Artist";
+import { Song } from "./details/Song";
 
 import type { TopAlbum, TopArtist, TopGenre, TopTrack } from "@/types";
 import type { ColumnDef } from "@tanstack/react-table";

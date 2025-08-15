@@ -3,12 +3,14 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 interface Props {
   onFileUploaded: (file: File) => void;
+  className?: string;
 }
 
-export const FileUploader = ({ onFileUploaded }: Props) => {
+export const FileUploader = ({ onFileUploaded, className }: Props) => {
   const [file, setFile] = useState<File | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,7 +26,7 @@ export const FileUploader = ({ onFileUploaded }: Props) => {
   };
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center">
+    <div className={cn("flex h-screen flex-col items-center justify-center", className)}>
       <Card className="w-[350px]">
         <CardHeader>
           <CardTitle>Apple Music Analysis</CardTitle>
