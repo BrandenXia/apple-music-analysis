@@ -39,4 +39,10 @@ The planned features and improvements for this project are tracked in `TODO.md`.
 
 # Git Workflow
 
-After completing a feature, fix, or refactoring task, changes should be committed to Git before starting the next task. This ensures a clean and atomic commit history.
+After completing a feature, fix, or refactoring task, changes should be committed to Git. Before committing, the following checks must be performed:
+
+1.  **Type Check:** Run `bun run build` to ensure there are no TypeScript errors.
+2.  **Lint:** Run `bun run lint` to check for code quality and style issues.
+3.  **Format:** Run `bun run format` to ensure the code is consistently formatted.
+
+This ensures a clean and atomic commit history.
