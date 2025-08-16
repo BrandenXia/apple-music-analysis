@@ -12,6 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 
 import { ModeToggle } from "./ModeToggle";
+import { SettingsDialog } from "./SettingsDialog";
 
 interface SidebarProps {
   isSidebarCollapsed: boolean;
@@ -76,7 +77,8 @@ export const Sidebar = ({
           </SelectContent>
         </Select>
       </div>
-      <div className="absolute bottom-4">
+      <div className="absolute bottom-4 flex items-center space-x-2">
+        <SettingsDialog />
         <ModeToggle />
       </div>
     </div>
