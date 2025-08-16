@@ -9,7 +9,7 @@ import { parse } from "@/lib/parser";
 
 export const ManageLibraries = () => {
   const setLibrary = useSetAtom(libraryAtom);
-  const libraries = useLiveQuery(() => db.libraries.toArray());
+  const libraries = useLiveQuery(() => db.libraries.orderBy("importedAt").reverse().toArray());
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDelete = (id: number) => {
