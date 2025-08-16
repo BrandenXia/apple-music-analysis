@@ -4,24 +4,24 @@ import { useEffect, useState } from "react";
 import { db } from "@/lib/db";
 import { parse } from "@/lib/parser";
 
-import { tracksAtom } from "./atoms";
+import { libraryAtom } from "./atoms/data";
 import { Dashboard } from "./components/Dashboard";
 import { FileUploader } from "./components/FileUploader";
 
 function App() {
-  const [tracks, setTracks] = useAtom(tracksAtom);
+  const [library, setLibrary] = useAtom(libraryAtom);
   const [isLibraryLoaded, setIsLibraryLoaded] = useState(false);
 
   useEffect(() => {
     const fetchLatestLibrary = async () => {
       const latestLibrary = await db.libraries.orderBy("importedAt").last();
       if (latestLibrary) {
-        setTracks(latestLibrary.data.tracks);
+        setLibrary(latestLibrary.data);
       }
       setIsLibraryLoaded(true);
     };
     fetchLatestLibrary();
-  }, [setTracks]);
+  }, [setLibrary]);
 
   const handleFileUploaded = async (file: File) => {
     const reader = new FileReader();
@@ -33,7 +33,7 @@ function App() {
           data: parsedLibrary,
           importedAt: new Date(),
         });
-        setTracks(parsedLibrary.tracks);
+        setLibrary(parsedLibrary);
       }
     };
     reader.readAsText(file);
@@ -44,9 +44,7 @@ function App() {
   }
 
   return (
-    <div>
-      {tracks.length > 0 ? <Dashboard /> : <FileUploader onFileUploaded={handleFileUploaded} />}
-    </div>
+    <div>{library ? <Dashboard /> : <FileUploader onFileUploaded={handleFileUploaded} />}</div>
   );
 }
 

@@ -12,9 +12,14 @@ import {
   startDateAtom,
 } from "./settings";
 
-import type { Analysis, Track } from "@/types";
+import type { Analysis, Library, Track } from "@/types";
 
-export const tracksAtom = atom<Track[]>([]);
+export const libraryAtom = atom<Library | null>(null);
+
+export const tracksAtom = atom<Track[]>((get) => {
+  const library = get(libraryAtom);
+  return library?.tracks || [];
+});
 
 export const analysisAtom = atom<Analysis | null>((get) => {
   const tracks = get(tracksAtom);
