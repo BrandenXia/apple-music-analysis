@@ -81,6 +81,11 @@ export const otherTabs = [
     icon: User,
     label: "Music Taste Profile",
   },
+  {
+    value: "most-played-trends",
+    icon: LineChart,
+    label: "Most Played Trends",
+  },
 ];
 
 export const allTabs = [...mostPlayedTabs, ...otherTabs];

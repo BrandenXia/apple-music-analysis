@@ -28,6 +28,7 @@ import { columns as genreDistributionColumns } from "./analysis/columns/genre-di
 import { DistributionChart } from "./analysis/DistributionChart";
 import { ForgottenFavorites } from "./analysis/ForgottenFavorites";
 import { MostPlayed } from "./analysis/MostPlayed";
+import { MostPlayedTrends } from "./analysis/MostPlayedTrends";
 import { MusicTasteProfile } from "./analysis/MusicTasteProfile";
 import { Trending } from "./analysis/Trending";
 
@@ -140,6 +141,9 @@ export const Dashboard = () => {
           </TabsContent>
           <TabsContent value="music-taste-profile">
             <MusicTasteProfile profile={analysis.musicTasteProfile} />
+          </TabsContent>
+          <TabsContent value="most-played-trends">
+            <MostPlayedTrends />
           </TabsContent>
         </Tabs>
       </div>

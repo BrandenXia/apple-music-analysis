@@ -9,3 +9,4 @@ export * from "./top-three-genres";
 export * from "./total-play-count";
 export * from "./total-time";
 export * from "./trending-data";
+export * from "./most-played-trends";

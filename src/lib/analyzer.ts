@@ -62,10 +62,10 @@ export const analyze = (
   }
 
   return {
-    mostPlayedTracks: getMostPlayedTracks(analysisTracks, 50, sortBy),
-    mostPlayedArtists: getMostPlayedArtists(analysisTracks, 50, sortBy),
-    mostPlayedAlbums: getMostPlayedAlbums(analysisTracks, 50, sortBy),
-    mostPlayedGenres: getMostPlayedGenres(analysisTracks, 50, sortBy, genreKey),
+    mostPlayedTracks: getMostPlayedTracks(analysisTracks, count, sortBy),
+    mostPlayedArtists: getMostPlayedArtists(analysisTracks, count, sortBy),
+    mostPlayedAlbums: getMostPlayedAlbums(analysisTracks, count, sortBy),
+    mostPlayedGenres: getMostPlayedGenres(analysisTracks, count, sortBy, genreKey),
     topThreeGenres: getTopThreeGenres(filteredTracks, count, genreKey),
     topThreeArtists: getTopThreeArtists(filteredTracks, count),
     totalPlayCount: getTotalPlayCount(analysisTracks),
