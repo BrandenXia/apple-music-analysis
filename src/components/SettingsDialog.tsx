@@ -38,7 +38,7 @@ export const SettingsDialog = () => {
           <DialogDescription>Manage your application settings.</DialogDescription>
         </DialogHeader>
         <div className="flex flex-1 overflow-hidden">
-          <div className="w-1/4 overflow-y-auto pr-4">
+          <div className="w-56 overflow-y-auto pr-4">
             <nav className="flex flex-col space-y-1">
               {sections.map((section) => (
                 <Button
