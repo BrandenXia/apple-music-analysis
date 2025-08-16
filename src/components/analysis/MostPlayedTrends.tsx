@@ -2,9 +2,9 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useAtomValue } from "jotai";
 import { useMemo } from "react";
 import {
-  Area,
-  AreaChart,
   CartesianGrid,
+  Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -13,6 +13,7 @@ import {
 
 import { countAtom, sortByAtom } from "@/atoms";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { getMostPlayedTrends } from "@/lib/analysis/most-played-trends";
 import { db } from "@/lib/db";
 
@@ -78,30 +79,31 @@ export const MostPlayedTrends = () => {
       </CardHeader>
       <CardContent>
         {chartData.length > 0 ? (
-          <ResponsiveContainer width="100%" height={400}>
-            <AreaChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis
-                label={{
-                  value: sortBy === "playCount" ? "Play Count" : "Play Time (seconds)",
-                  angle: -90,
-                  position: "insideLeft",
-                }}
-              />
-              <Tooltip />
-              {trackNames.map((name) => (
-                <Area
-                  key={name}
-                  type="monotone"
-                  dataKey={name}
-                  stackId="1"
-                  stroke={getRandomColor()}
-                  fill={getRandomColor()}
+          <ChartContainer config={{}} className="min-h-[200px] w-full">
+            <ResponsiveContainer width="100%" height={400}>
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis
+                  label={{
+                    value: sortBy === "playCount" ? "Play Count" : "Play Time (seconds)",
+                    angle: -90,
+                    position: "insideLeft",
+                  }}
                 />
-              ))}
-            </AreaChart>
-          </ResponsiveContainer>
+                <Tooltip content={<ChartTooltipContent />} />
+                {trackNames.map((name) => (
+                  <Line
+                    key={name}
+                    type="monotone"
+                    dataKey={name}
+                    stroke={getRandomColor()}
+                    fill={getRandomColor()}
+                  />
+                ))}
+              </LineChart>
+            </ResponsiveContainer>
+          </ChartContainer>
         ) : (
           <p>No trend data available. Import more libraries to see trends.</p>
         )}
