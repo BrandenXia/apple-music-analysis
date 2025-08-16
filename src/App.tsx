@@ -1,5 +1,6 @@
 import { useAtom, useAtomValue } from "jotai";
 
+import { db } from "@/lib/db";
 import { parse } from "@/lib/parser";
 
 import { analysisAtom, tracksAtom } from "./atoms";
@@ -10,12 +11,17 @@ function App() {
   const [tracks, setTracks] = useAtom(tracksAtom);
   const analysis = useAtomValue(analysisAtom);
 
-  const handleFileUploaded = (file: File) => {
+  const handleFileUploaded = async (file: File) => {
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = async (e) => {
       if (e.target?.result) {
-        const parsedTracks = parse(e.target.result as string);
-        setTracks(parsedTracks);
+        const parsedLibrary = parse(e.target.result as string);
+        await db.libraries.add({
+          name: file.name,
+          data: parsedLibrary,
+          importedAt: new Date(),
+        });
+        setTracks(parsedLibrary.tracks);
       }
     };
     reader.readAsText(file);

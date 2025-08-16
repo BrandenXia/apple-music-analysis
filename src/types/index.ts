@@ -11,6 +11,10 @@ export interface Track {
   "Date Added": string;
 }
 
+export interface Library {
+  tracks: Track[];
+}
+
 export interface TopTrack {
   name: string;
   artist: string;

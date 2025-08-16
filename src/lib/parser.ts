@@ -1,6 +1,6 @@
-import type { Track } from "@/types";
+import type { Library, Track } from "@/types";
 
-export const parse = (xml: string): Track[] => {
+export const parse = (xml: string): Library => {
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(xml, "text/xml");
   const trackDicts = xmlDoc
@@ -32,5 +32,5 @@ export const parse = (xml: string): Track[] => {
     });
   }
 
-  return tracks;
+  return { tracks: tracks };
 };
