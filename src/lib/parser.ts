@@ -3,10 +3,17 @@ import type { Library, Track } from "@/types";
 export const parse = (xml: string): Library => {
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(xml, "text/xml");
-  const trackDicts = xmlDoc
-    .getElementsByTagName("dict")[0]
-    .getElementsByTagName("dict")[0]
-    .getElementsByTagName("dict");
+  const mainDict = xmlDoc.getElementsByTagName("dict")[0];
+
+  let importDate: string | undefined;
+  const mainKeys = mainDict.getElementsByTagName("key");
+  for (let i = 0; i < mainKeys.length; i++)
+    if (mainKeys[i].textContent === "Date") {
+      importDate = mainKeys[i].nextElementSibling?.textContent || undefined;
+      break;
+    }
+
+  const trackDicts = mainDict.getElementsByTagName("dict")[0].getElementsByTagName("dict");
 
   const tracks: Track[] = [];
 
@@ -32,5 +39,5 @@ export const parse = (xml: string): Library => {
     });
   }
 
-  return { tracks: tracks };
+  return { tracks: tracks, date: importDate ? new Date(importDate) : undefined };
 };

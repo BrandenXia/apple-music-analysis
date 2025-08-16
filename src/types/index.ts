@@ -13,6 +13,7 @@ export interface Track {
 
 export interface Library {
   tracks: Track[];
+  date?: Date;
 }
 
 export interface TopTrack {

@@ -31,7 +31,7 @@ function App() {
         await db.libraries.add({
           name: file.name,
           data: parsedLibrary,
-          importedAt: new Date(),
+          importedAt: parsedLibrary.date || new Date(),
         });
         setLibrary(parsedLibrary);
       }
