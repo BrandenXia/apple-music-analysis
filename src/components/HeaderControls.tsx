@@ -1,7 +1,7 @@
 import { useAtom } from "jotai";
 import { X } from "lucide-react";
 
-import { countAtom, filterAtom, searchTermAtom, sortByAtom } from "@/atoms";
+import { countAtom, filterAtom, searchTermAtom, sortByAtom, trendViewAtom } from "@/atoms";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -21,6 +21,7 @@ export const HeaderControls = ({ activeTab }: HeaderControlsProps) => {
   const [count, setCount] = useAtom(countAtom);
   const [sortBy, setSortBy] = useAtom(sortByAtom);
   const [filter, setFilter] = useAtom(filterAtom);
+  const [trendView, setTrendView] = useAtom(trendViewAtom);
 
   return (
     <div className="my-4 flex items-center justify-between">
@@ -69,6 +70,25 @@ export const HeaderControls = ({ activeTab }: HeaderControlsProps) => {
               <SelectContent>
                 <SelectItem value="playCount">Play Count</SelectItem>
                 <SelectItem value="playTime">Play Time</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+        {activeTab === "most-played-trends" && (
+          <div className="flex items-center space-x-2">
+            <label htmlFor="trend-view" className="whitespace-nowrap">
+              View
+            </label>
+            <Select
+              onValueChange={(value: "absolute" | "difference") => setTrendView(value)}
+              defaultValue={trendView}
+            >
+              <SelectTrigger id="trend-view" className="w-[120px]">
+                <SelectValue placeholder="Trend View" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="absolute">Absolute</SelectItem>
+                <SelectItem value="difference">Difference</SelectItem>
               </SelectContent>
             </Select>
           </div>

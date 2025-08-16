@@ -14,6 +14,8 @@ import {
 
 import type { Analysis, Library, Track } from "@/types";
 
+export const trendViewAtom = atom<"absolute" | "difference">("absolute");
+
 export const libraryAtom = atom<Library | null>(null);
 
 export const tracksAtom = atom<Track[]>((get) => {

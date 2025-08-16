@@ -11,17 +11,19 @@ import {
   YAxis,
 } from "recharts";
 
-import { countAtom, sortByAtom } from "@/atoms";
+import { countAtom, sortByAtom, trendViewAtom } from "@/atoms";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { getMostPlayedTrends } from "@/lib/analysis/most-played-trends";
 import { db } from "@/lib/db";
 
 import type { MostPlayedSnapshot } from "@/lib/analysis/most-played-trends";
+import type { TopTrack } from "@/types";
 
 export const MostPlayedTrends = () => {
   const sortBy = useAtomValue(sortByAtom);
   const count = useAtomValue(countAtom);
+  const trendView = useAtomValue(trendViewAtom);
   const allLibraries = useLiveQuery(() => db.libraries.orderBy("importedAt").toArray());
 
   const trends: MostPlayedSnapshot[] = useMemo(() => {
@@ -32,31 +34,56 @@ export const MostPlayedTrends = () => {
   const chartData = useMemo(() => {
     if (!trends || trends.length === 0) return [];
 
-    const dataMap: { [date: string]: { [name: string]: number } } = {};
     const allTrackNames: Set<string> = new Set();
 
+    // Collect all unique track names across all snapshots
     trends.forEach((snapshot) => {
-      const date = new Date(snapshot.importedAt).toLocaleDateString();
-      dataMap[date] = dataMap[date] || {};
       snapshot.mostPlayedTracks.slice(0, count).forEach((track) => {
-        const trackName = `${track.name} - ${track.artist}`;
-        dataMap[date][trackName] = sortBy === "playCount" ? track.playCount : track.playTime;
-        allTrackNames.add(trackName);
+        allTrackNames.add(`${track.name} - ${track.artist}`);
       });
     });
 
-    const sortedDates = Object.keys(dataMap).sort(
-      (a, b) => new Date(a).getTime() - new Date(b).getTime(),
-    );
-
-    return sortedDates.map((date) => {
+    const processedData = trends.map((snapshot, i) => {
+      const date = new Date(snapshot.importedAt).toLocaleDateString();
       const entry: { [key: string]: number | string } = { date };
+
       allTrackNames.forEach((trackName) => {
-        entry[trackName] = dataMap[date][trackName] || 0;
+        const currentTrack = snapshot.mostPlayedTracks.find(
+          (t: TopTrack) => `${t.name} - ${t.artist}` === trackName,
+        );
+
+        if (trendView === "difference" && i > 0) {
+          const prevSnapshot = trends[i - 1];
+          const prevTrack = prevSnapshot.mostPlayedTracks.find(
+            (t: TopTrack) => `${t.name} - ${t.artist}` === trackName,
+          );
+
+          const currentValue = currentTrack
+            ? sortBy === "playCount"
+              ? currentTrack.playCount
+              : currentTrack.playTime
+            : 0;
+          const prevValue = prevTrack
+            ? sortBy === "playCount"
+              ? prevTrack.playCount
+              : prevTrack.playTime
+            : 0;
+
+          entry[trackName] = currentValue - prevValue;
+        } else {
+          entry[trackName] = currentTrack
+            ? sortBy === "playCount"
+              ? currentTrack.playCount
+              : currentTrack.playTime
+            : 0;
+        }
       });
       return entry;
     });
-  }, [trends, sortBy, count]);
+
+    // Filter out the first entry if in difference mode, as it will always be 0 or the absolute value
+    return trendView === "difference" ? processedData.slice(1) : processedData;
+  }, [trends, sortBy, count, trendView]);
 
   const trackNames = useMemo(() => {
     if (chartData.length === 0) return [];
@@ -75,7 +102,10 @@ export const MostPlayedTrends = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Top {count} Most Played Tracks Trend Over Time</CardTitle>
+        <CardTitle>
+          Top {count} Most Played Tracks {trendView === "difference" ? "Difference" : "Trend"} Over
+          Time
+        </CardTitle>
       </CardHeader>
       <CardContent>
         {chartData.length > 0 ? (
@@ -86,7 +116,12 @@ export const MostPlayedTrends = () => {
                 <XAxis dataKey="date" />
                 <YAxis
                   label={{
-                    value: sortBy === "playCount" ? "Play Count" : "Play Time (seconds)",
+                    value:
+                      trendView === "difference"
+                        ? `Difference in ${sortBy === "playCount" ? "Play Count" : "Play Time (seconds)"}`
+                        : sortBy === "playCount"
+                          ? "Play Count"
+                          : "Play Time (seconds)",
                     angle: -90,
                     position: "insideLeft",
                   }}
