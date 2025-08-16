@@ -77,7 +77,12 @@ export const Sidebar = ({
           </SelectContent>
         </Select>
       </div>
-      <div className="absolute bottom-4 flex items-center space-x-2">
+      <div
+        className={cn(
+          "absolute bottom-4 flex",
+          isSidebarCollapsed ? "flex-col space-y-2" : "items-center space-x-2",
+        )}
+      >
         <SettingsDialog />
         <ModeToggle />
       </div>
