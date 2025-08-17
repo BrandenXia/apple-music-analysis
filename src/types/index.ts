@@ -60,10 +60,19 @@ export interface Analysis {
 
 export interface MusicTasteProfileData {
   topDecade: { decade: string; count: number } | null;
+  topGenres: TopGenre[];
   oldestFavorite?: TopTrack;
   newestFavorite?: TopTrack;
   listenerType: {
     type: "Specialist" | "Generalist";
+    description: string;
+  };
+  diversity: {
+    score: number;
+    description: string;
+  };
+  timeTraveler: {
+    score: number;
     description: string;
   };
 }

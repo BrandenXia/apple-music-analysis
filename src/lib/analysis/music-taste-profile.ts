@@ -1,3 +1,4 @@
+import { getMostPlayedGenres } from "./most-played-genres";
 import { getMostPlayedTracks } from "./most-played-tracks";
 
 import type { Analysis, Track } from "@/types";
@@ -6,11 +7,20 @@ export const getMusicTasteProfile = (tracks: Track[]): Analysis["musicTasteProfi
   if (tracks.length === 0) {
     return {
       topDecade: null,
+      topGenres: [],
       oldestFavorite: undefined,
       newestFavorite: undefined,
       listenerType: {
         type: "Generalist",
         description: "Not enough data to determine listener type.",
+      },
+      diversity: {
+        score: 0,
+        description: "Not enough data to calculate diversity.",
+      },
+      timeTraveler: {
+        score: 0,
+        description: "Not enough data to calculate time traveler score.",
       },
     };
   }
@@ -30,6 +40,9 @@ export const getMusicTasteProfile = (tracks: Track[]): Analysis["musicTasteProfi
   const topDecade = topDecadeEntry
     ? { decade: `${topDecadeEntry[0]}s`, count: topDecadeEntry[1] }
     : null;
+
+  // Top Genres
+  const topGenres = getMostPlayedGenres(tracks, 5);
 
   // Oldest and Newest Favorites
   const tracksWithYear = tracks.filter((t) => t.Year);
@@ -69,10 +82,31 @@ export const getMusicTasteProfile = (tracks: Track[]): Analysis["musicTasteProfi
             "You're a Generalist! You have a diverse taste and listen to a wide variety of artists.",
         };
 
+  // Diversity
+  const uniqueArtists = new Set(tracks.map((t) => t.Artist));
+  const diversityScore = Math.min(uniqueArtists.size / 50, 1) * 100;
+  const diversity = {
+    score: diversityScore,
+    description: `You have listened to ${uniqueArtists.size} different artists.`,
+  };
+
+  // Time Traveler
+  const uniqueDecades = new Set(
+    tracks.map((t) => (t.Year ? Math.floor(t.Year / 10) * 10 : null)).filter(Boolean),
+  );
+  const timeTravelerScore = Math.min(uniqueDecades.size / 5, 1) * 100;
+  const timeTraveler = {
+    score: timeTravelerScore,
+    description: `You have listened to music from ${uniqueDecades.size} different decades.`,
+  };
+
   return {
     topDecade,
+    topGenres,
     oldestFavorite,
     newestFavorite,
     listenerType,
+    diversity,
+    timeTraveler,
   };
 };

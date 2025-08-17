@@ -15,7 +15,7 @@ interface Props {
 }
 
 export const MusicTasteProfile = ({ profile }: Props) => (
-  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+  <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
     <Card>
       <CardHeader>
         <CardTitle>Top Decade</CardTitle>
@@ -40,7 +40,39 @@ export const MusicTasteProfile = ({ profile }: Props) => (
         <p className="text-muted-foreground">{profile.listenerType.description}</p>
       </CardContent>
     </Card>
-    <Card className="md:col-span-2">
+    <Card>
+      <CardHeader>
+        <CardTitle>Top Genres</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <ul className="list-disc pl-5">
+          {profile.topGenres.map((genre) => (
+            <li key={genre.name}>
+              {genre.name} ({genre.playCount} plays)
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+    </Card>
+    <Card>
+      <CardHeader>
+        <CardTitle>Listening Diversity</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-4xl font-bold">{profile.diversity.score.toFixed(0)}/100</p>
+        <p className="text-muted-foreground">{profile.diversity.description}</p>
+      </CardContent>
+    </Card>
+    <Card>
+      <CardHeader>
+        <CardTitle>Time Traveler</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-4xl font-bold">{profile.timeTraveler.score.toFixed(0)}/100</p>
+        <p className="text-muted-foreground">{profile.timeTraveler.description}</p>
+      </CardContent>
+    </Card>
+    <Card className="md:col-span-3">
       <CardHeader>
         <CardTitle>Favorites</CardTitle>
       </CardHeader>
