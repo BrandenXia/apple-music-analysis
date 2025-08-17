@@ -1,8 +1,3 @@
-/**
- * @deprecated This function is deprecated and will be removed in a future version.
- * Use the analysis atoms instead.
- */
-
 import {
   getForgottenFavorites,
   getMostPlayedAlbums,
@@ -19,6 +14,10 @@ import { filterTracks } from "./filter";
 
 import type { Analysis, Track } from "@/types";
 
+/**
+ * @deprecated This function is deprecated and will be removed in a future version.
+ * Use the analysis atoms instead.
+ */
 export const _analyze = (
   tracks: Track[],
   startDate?: string,
