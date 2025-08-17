@@ -1,4 +1,7 @@
-import Fuse from "fuse.js";
+/**
+ * @deprecated This function is deprecated and will be removed in a future version.
+ * Use the analysis atoms instead.
+ */
 
 import {
   getForgottenFavorites,
@@ -12,10 +15,11 @@ import {
   getTotalPlayCount,
   getTotalTime,
 } from "./analysis";
+import { filterTracks } from "./filter";
 
 import type { Analysis, Track } from "@/types";
 
-export const analyze = (
+export const _analyze = (
   tracks: Track[],
   startDate?: string,
   endDate?: string,
@@ -28,49 +32,18 @@ export const analyze = (
   },
   searchTerm: string = "",
 ): Analysis => {
-  let filteredTracks = tracks;
-  if (startDate && endDate) {
-    filteredTracks = tracks.filter((track) => {
-      const dateAdded = new Date(track["Date Added"]);
-      return dateAdded >= new Date(startDate) && dateAdded <= new Date(endDate);
-    });
-  }
-
-  let analysisTracks = filteredTracks;
-  if (filter.type && filter.value) {
-    analysisTracks = filteredTracks.filter((track) => {
-      if (filter.type === "genre") {
-        const genreSource = track[genreKey] || (genreKey === "Grouping" ? track.Genre : undefined);
-        return genreSource?.includes(filter.value!);
-      }
-      if (filter.type === "artist") {
-        return track.Artist === filter.value;
-      }
-      if (filter.type === "album") {
-        return track.Album === filter.value;
-      }
-      return true;
-    });
-  }
-
-  if (searchTerm) {
-    const fuse = new Fuse(analysisTracks, {
-      keys: ["Name", "Artist", "Album"],
-      threshold: 0.3,
-    });
-    analysisTracks = fuse.search(searchTerm).map((result) => result.item);
-  }
+  const filteredTracks = filterTracks(tracks, startDate, endDate, filter, searchTerm, genreKey);
 
   return {
-    mostPlayedTracks: getMostPlayedTracks(analysisTracks, count, sortBy),
-    mostPlayedArtists: getMostPlayedArtists(analysisTracks, count, sortBy),
-    mostPlayedAlbums: getMostPlayedAlbums(analysisTracks, count, sortBy),
-    mostPlayedGenres: getMostPlayedGenres(analysisTracks, count, sortBy, genreKey),
-    topThreeGenres: getTopThreeGenres(filteredTracks, count, genreKey),
-    topThreeArtists: getTopThreeArtists(filteredTracks, count),
-    totalPlayCount: getTotalPlayCount(analysisTracks),
-    totalTime: getTotalTime(analysisTracks),
-    forgottenFavorites: getForgottenFavorites(analysisTracks, 50),
-    musicTasteProfile: getMusicTasteProfile(analysisTracks),
+    mostPlayedTracks: getMostPlayedTracks(filteredTracks, count, sortBy),
+    mostPlayedArtists: getMostPlayedArtists(filteredTracks, count, sortBy),
+    mostPlayedAlbums: getMostPlayedAlbums(filteredTracks, count, sortBy),
+    mostPlayedGenres: getMostPlayedGenres(filteredTracks, count, sortBy, genreKey),
+    topThreeGenres: getTopThreeGenres(tracks, count, genreKey),
+    topThreeArtists: getTopThreeArtists(tracks, count),
+    totalPlayCount: getTotalPlayCount(filteredTracks),
+    totalTime: getTotalTime(filteredTracks),
+    forgottenFavorites: getForgottenFavorites(filteredTracks, 50),
+    musicTasteProfile: getMusicTasteProfile(filteredTracks),
   };
 };

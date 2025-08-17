@@ -1,4 +1,9 @@
-import { analyze } from "@/lib/analyzer";
+import {
+  getMostPlayedAlbums,
+  getMostPlayedArtists,
+  getMostPlayedGenres,
+  getMostPlayedTracks,
+} from "./";
 
 import type { Library, TopAlbum, TopArtist, TopGenre, TopTrack } from "@/types";
 
@@ -18,16 +23,14 @@ export const getMostPlayedTrends = (
   const trends: MostPlayedSnapshot[] = [];
 
   for (const lib of allLibraries) {
-    const analysisResult = analyze(lib.data.tracks, undefined, undefined, sortBy, undefined, count);
-    if (analysisResult) {
-      trends.push({
-        importedAt: lib.importedAt,
-        mostPlayedTracks: analysisResult.mostPlayedTracks,
-        mostPlayedArtists: analysisResult.mostPlayedArtists,
-        mostPlayedAlbums: analysisResult.mostPlayedAlbums,
-        mostPlayedGenres: analysisResult.mostPlayedGenres,
-      });
-    }
+    const tracks = lib.data.tracks;
+    trends.push({
+      importedAt: lib.importedAt,
+      mostPlayedTracks: getMostPlayedTracks(tracks, count, sortBy),
+      mostPlayedArtists: getMostPlayedArtists(tracks, count, sortBy),
+      mostPlayedAlbums: getMostPlayedAlbums(tracks, count, sortBy),
+      mostPlayedGenres: getMostPlayedGenres(tracks, count, sortBy, "Grouping"),
+    });
   }
 
   return trends;

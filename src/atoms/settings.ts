@@ -12,3 +12,13 @@ export const filterAtom = atom<{ type: "genre" | "artist" | "album" | null; valu
   },
 );
 export const searchTermAtom = atom<string>("");
+
+export const settingsAtom = atom((get) => ({
+  startDate: get(startDateAtom),
+  endDate: get(endDateAtom),
+  sortBy: get(sortByAtom),
+  genreKey: get(genreKeyAtom),
+  count: get(countAtom),
+  filter: get(filterAtom),
+  searchTerm: get(searchTermAtom),
+}));

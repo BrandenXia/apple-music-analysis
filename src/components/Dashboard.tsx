@@ -1,44 +1,21 @@
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { useMemo, useState } from "react";
+import { useAtom, useSetAtom } from "jotai";
+import { useState } from "react";
 
-import {
-  activeTabAtom,
-  analysisAtom,
-  endDateAtom,
-  genreKeyAtom,
-  sortByAtom,
-  startDateAtom,
-  tracksAtom,
-} from "@/atoms";
+import { activeTabAtom, endDateAtom, genreKeyAtom, startDateAtom } from "@/atoms";
 import { HeaderControls } from "@/components/HeaderControls";
 import { Sidebar } from "@/components/Sidebar";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { allTabs, mostPlayedTabs } from "@/config/tabs";
-import { getTrendingData } from "@/lib/analysis/trending-data";
 
-import { columns as artistDistributionColumns } from "./analysis/columns/artist-distribution";
-import { columns as genreDistributionColumns } from "./analysis/columns/genre-distribution";
-import { DistributionChart } from "./analysis/DistributionChart";
-import { ForgottenFavorites } from "./analysis/ForgottenFavorites";
-import { MostPlayed } from "./analysis/MostPlayed";
-import { MostPlayedTrends } from "./analysis/MostPlayedTrends";
-import { MusicTasteProfile } from "./analysis/MusicTasteProfile";
-import { Trending } from "./analysis/Trending";
-
-import type { ColumnDef } from "@tanstack/react-table";
-import type { MostPlayedItem } from "./analysis/MostPlayed";
+import { ArtistDistributionTab } from "./tabs/ArtistDistributionTab";
+import { ForgottenFavoritesTab } from "./tabs/ForgottenFavoritesTab";
+import { GenreDistributionTab } from "./tabs/GenreDistributionTab";
+import { MostPlayedTab } from "./tabs/MostPlayedTab";
+import { MostPlayedTrendsTab } from "./tabs/MostPlayedTrendsTab";
+import { MusicTasteProfileTab } from "./tabs/MusicTasteProfileTab";
+import { TrendingTab } from "./tabs/TrendingTab";
 
 export const Dashboard = () => {
-  const analysis = useAtomValue(analysisAtom);
-  const tracks = useAtomValue(tracksAtom);
-  const sortBy = useAtomValue(sortByAtom);
   const setStartDate = useSetAtom(startDateAtom);
   const setEndDate = useSetAtom(endDateAtom);
   const [genreKey, setGenreKey] = useAtom(genreKeyAtom);
@@ -46,21 +23,12 @@ export const Dashboard = () => {
 
   const [startDateValue, setStartDateValue] = useState<Date | undefined>();
   const [endDateValue, setEndDateValue] = useState<Date | undefined>();
-  const [trendingType, setTrendingType] = useState<"artist" | "album">("artist");
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const handleDateRangeChange = () => {
     setStartDate(startDateValue?.toISOString());
     setEndDate(endDateValue?.toISOString());
   };
-
-  const trendingData = useMemo(() => {
-    return getTrendingData(tracks, trendingType);
-  }, [tracks, trendingType]);
-
-  if (!analysis) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div className="flex h-screen">
@@ -88,62 +56,26 @@ export const Dashboard = () => {
           <HeaderControls activeTab={activeTab} />
           {mostPlayedTabs.map((tab) => (
             <TabsContent value={tab.value} key={tab.value}>
-              <MostPlayed
-                items={analysis[tab.dataKey as keyof typeof analysis] as MostPlayedItem[]}
-                sortBy={sortBy}
-                columns={tab.columns as ColumnDef<MostPlayedItem, unknown>[]}
-                getLabel={tab.getLabel as (item: MostPlayedItem) => string}
-                filterType={tab.filterType as "artist" | "album" | "genre"}
-              />
+              <MostPlayedTab tab={tab} />
             </TabsContent>
           ))}
           <TabsContent value="genre-distribution">
-            <DistributionChart
-              data={analysis.topThreeGenres}
-              columns={genreDistributionColumns}
-              filterType="genre"
-              fileName="genre-distribution"
-              hideTooltipLabel
-            />
+            <GenreDistributionTab />
           </TabsContent>
           <TabsContent value="artist-distribution">
-            <DistributionChart
-              data={analysis.topThreeArtists}
-              columns={artistDistributionColumns}
-              filterType="artist"
-              fileName="artist-distribution"
-            />
+            <ArtistDistributionTab />
           </TabsContent>
           <TabsContent value="trending">
-            <div>
-              <div className="mb-4 flex items-center">
-                <label htmlFor="trending-type" className="mr-2">
-                  Analyze by
-                </label>
-                <Select
-                  onValueChange={(value: "artist" | "album") => setTrendingType(value)}
-                  defaultValue={trendingType}
-                >
-                  <SelectTrigger id="trending-type" className="w-[180px]">
-                    <SelectValue placeholder="Select type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="artist">Artist</SelectItem>
-                    <SelectItem value="album">Album</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              {trendingData && <Trending data={trendingData} />}
-            </div>
+            <TrendingTab />
           </TabsContent>
           <TabsContent value="forgotten-favorites">
-            <ForgottenFavorites items={analysis.forgottenFavorites} />
+            <ForgottenFavoritesTab />
           </TabsContent>
           <TabsContent value="music-taste-profile">
-            <MusicTasteProfile profile={analysis.musicTasteProfile} />
+            <MusicTasteProfileTab />
           </TabsContent>
           <TabsContent value="most-played-trends">
-            <MostPlayedTrends />
+            <MostPlayedTrendsTab />
           </TabsContent>
         </Tabs>
       </div>
