@@ -53,7 +53,7 @@ export const Dashboard = () => {
               </TabsTrigger>
             ))}
           </TabsList>
-          <HeaderControls activeTab={activeTab} />
+          <HeaderControls />
           {mostPlayedTabs.map((tab) => (
             <TabsContent value={tab.value} key={tab.value}>
               <MostPlayedTab tab={tab} />

@@ -9,6 +9,7 @@ export const filterAtom = atom<{ type: "genre" | "artist" | "album" | null; valu
   { type: null, value: null },
 );
 export const searchTermAtom = atom<string>("");
+export const trendingTypeAtom = atom<"artist" | "album">("artist");
 
 export const settingsAtom = atom((get) => ({
   startDate: get(startDateAtom),
@@ -18,4 +19,5 @@ export const settingsAtom = atom((get) => ({
   count: get(countAtom),
   filter: get(filterAtom),
   searchTerm: get(searchTermAtom),
+  trendingType: get(trendingTypeAtom),
 }));

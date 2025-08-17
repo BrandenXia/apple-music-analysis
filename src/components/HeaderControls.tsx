@@ -1,7 +1,15 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { X } from "lucide-react";
 
-import { countAtom, filterAtom, searchTermAtom, sortByAtom, trendViewAtom } from "@/atoms";
+import {
+  countAtom,
+  filterAtom,
+  headerControlsAtom,
+  searchTermAtom,
+  sortByAtom,
+  trendingTypeAtom,
+  trendViewAtom,
+} from "@/atoms";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,21 +20,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface HeaderControlsProps {
-  activeTab: string;
-}
-
-export const HeaderControls = ({ activeTab }: HeaderControlsProps) => {
+export const HeaderControls = () => {
   const [searchTerm, setSearchTerm] = useAtom(searchTermAtom);
   const [count, setCount] = useAtom(countAtom);
   const [sortBy, setSortBy] = useAtom(sortByAtom);
   const [filter, setFilter] = useAtom(filterAtom);
+  const [trendingType, setTrendingType] = useAtom(trendingTypeAtom);
   const [trendView, setTrendView] = useAtom(trendViewAtom);
+  const controls = useAtomValue(headerControlsAtom);
 
   return (
     <div className="my-4 flex items-center justify-between">
       <div className="flex flex-nowrap items-center space-x-4">
-        {activeTab.startsWith("most-played") && (
+        {controls.includes("search") && (
           <Input
             placeholder="Search..."
             value={searchTerm}
@@ -34,7 +40,7 @@ export const HeaderControls = ({ activeTab }: HeaderControlsProps) => {
             className="max-w-sm"
           />
         )}
-        {(activeTab.startsWith("most-played") || activeTab.endsWith("-distribution")) && (
+        {controls.includes("count") && (
           <div className="flex items-center space-x-2">
             <label htmlFor="count" className="whitespace-nowrap">
               Show top
@@ -55,7 +61,7 @@ export const HeaderControls = ({ activeTab }: HeaderControlsProps) => {
             </Select>
           </div>
         )}
-        {activeTab.startsWith("most-played") && (
+        {controls.includes("sortBy") && (
           <div className="flex items-center space-x-2">
             <label htmlFor="sort-by" className="whitespace-nowrap">
               Sort by
@@ -74,7 +80,26 @@ export const HeaderControls = ({ activeTab }: HeaderControlsProps) => {
             </Select>
           </div>
         )}
-        {activeTab === "most-played-trends" && (
+        {controls.includes("trendingType") && (
+          <div className="flex items-center space-x-2">
+            <label htmlFor="trending-type" className="whitespace-nowrap">
+              Analyze by
+            </label>
+            <Select
+              onValueChange={(value: "artist" | "album") => setTrendingType(value)}
+              defaultValue={trendingType}
+            >
+              <SelectTrigger id="trending-type" className="w-[120px]">
+                <SelectValue placeholder="Analyze by" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="artist">Artist</SelectItem>
+                <SelectItem value="album">Album</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+        {controls.includes("trendView") && (
           <div className="flex items-center space-x-2">
             <label htmlFor="trend-view" className="whitespace-nowrap">
               View

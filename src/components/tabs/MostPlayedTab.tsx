@@ -1,4 +1,5 @@
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
+import { useEffect } from "react";
 
 import {
   mostPlayedAlbumsAtom,
@@ -6,6 +7,7 @@ import {
   mostPlayedGenresAtom,
   mostPlayedTracksAtom,
 } from "@/atoms/analysis";
+import { headerControlsAtom } from "@/atoms/header";
 import { sortByAtom } from "@/atoms/settings";
 import { MostPlayed } from "@/components/analysis/MostPlayed";
 import { mostPlayedTabs } from "@/config/tabs";
@@ -23,6 +25,12 @@ const atomMapping = {
 export const MostPlayedTab = ({ tab }: { tab: (typeof mostPlayedTabs)[number] }) => {
   const items = useAtomValue(atomMapping[tab.value as keyof typeof atomMapping]);
   const sortBy = useAtomValue(sortByAtom);
+  const setHeaderControls = useSetAtom(headerControlsAtom);
+
+  useEffect(() => {
+    setHeaderControls(["sortBy", "count", "search"]);
+    return () => setHeaderControls([]);
+  }, [setHeaderControls]);
 
   return (
     <MostPlayed
