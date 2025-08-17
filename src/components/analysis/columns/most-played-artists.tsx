@@ -6,14 +6,8 @@ import type { TopArtist } from "@/types";
 import type { ColumnDef } from "@tanstack/react-table";
 
 export const columns: ColumnDef<TopArtist>[] = [
-  {
-    accessorKey: "name",
-    header: "Artist",
-  },
-  {
-    accessorKey: "playCount",
-    header: "Play Count",
-  },
+  { accessorKey: "name", header: "Artist" },
+  { accessorKey: "playCount", header: "Play Count" },
   {
     accessorKey: "playTime",
     header: "Play Time",

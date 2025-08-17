@@ -12,10 +12,7 @@ export const ManageLibraries = () => {
   const libraries = useLiveQuery(() => db.libraries.orderBy("importedAt").reverse().toArray());
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleDelete = (id: number) => {
-    db.libraries.delete(id);
-  };
-
+  const handleDelete = (id: number) => db.libraries.delete(id);
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -35,9 +32,7 @@ export const ManageLibraries = () => {
     }
   };
 
-  const handleImportClick = () => {
-    fileInputRef.current?.click();
-  };
+  const handleImportClick = () => fileInputRef.current?.click();
 
   return (
     <div>

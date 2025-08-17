@@ -38,9 +38,9 @@ export const MostPlayedTrends = () => {
 
     // Collect all unique track names across all snapshots
     trends.forEach((snapshot) => {
-      snapshot.mostPlayedTracks.slice(0, count).forEach((track) => {
-        allTrackNames.add(`${track.name} - ${track.artist}`);
-      });
+      snapshot.mostPlayedTracks
+        .slice(0, count)
+        .forEach((track) => allTrackNames.add(`${track.name} - ${track.artist}`));
     });
 
     const processedData = trends.map((snapshot, i) => {

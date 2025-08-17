@@ -14,15 +14,11 @@ export const FileUploader = ({ onFileUploaded, className }: Props) => {
   const [file, setFile] = useState<File | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
-    }
+    if (e.target.files) setFile(e.target.files[0]);
   };
 
   const handleUpload = () => {
-    if (file) {
-      onFileUploaded(file);
-    }
+    if (file) onFileUploaded(file);
   };
 
   return (

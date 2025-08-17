@@ -56,9 +56,9 @@ export const DistributionChart = ({
 
   const handleClick = (d: { name: string }) => {
     const value = d.name;
-    if (filter.type === filterType && filter.value === value) {
+    if (filter.type === filterType && filter.value === value)
       setFilter({ type: null, value: null });
-    } else {
+    else {
       setFilter({ type: filterType, value: value });
       setActiveTab("most-played-tracks");
     }

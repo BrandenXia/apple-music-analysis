@@ -15,9 +15,7 @@ function App() {
   useEffect(() => {
     const fetchLatestLibrary = async () => {
       const latestLibrary = await db.libraries.orderBy("importedAt").last();
-      if (latestLibrary) {
-        setLibrary(latestLibrary.data);
-      }
+      if (latestLibrary) setLibrary(latestLibrary.data);
       setIsLibraryLoaded(true);
     };
     fetchLatestLibrary();
@@ -39,9 +37,7 @@ function App() {
     reader.readAsText(file);
   };
 
-  if (!isLibraryLoaded) {
-    return <div>Loading application...</div>; // Or a spinner
-  }
+  if (!isLibraryLoaded) return <div>Loading application...</div>; // Or a spinner
 
   return (
     <div>{library ? <Dashboard /> : <FileUploader onFileUploaded={handleFileUploaded} />}</div>

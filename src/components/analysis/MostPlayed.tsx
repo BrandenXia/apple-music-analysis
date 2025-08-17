@@ -59,9 +59,7 @@ export const MostPlayed = <T extends MostPlayedItem>({
     if (filterType) {
       setFilter({ type: filterType, value: item.name });
       setActiveTab("most-played-tracks");
-    } else {
-      setSelectedItem(item);
-    }
+    } else setSelectedItem(item);
   };
 
   const bars =

@@ -16,16 +16,12 @@ export const Song = ({ track }: Props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (track.Name && track.Artist) {
+    if (track.Name && track.Artist)
       getTrackImage(track.Name, track.Artist).then((url) => {
-        if (typeof url === "string") {
-          setImageUrl(url);
-        }
+        if (typeof url === "string") setImageUrl(url);
         setLoading(false);
       });
-    } else {
-      setLoading(false);
-    }
+    else setLoading(false);
   }, [track]);
 
   return (

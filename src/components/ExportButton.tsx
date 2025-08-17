@@ -12,14 +12,13 @@ interface Props {
 
 export const ExportButton = ({ elementRef, fileName, className }: Props) => {
   const handleExport = () => {
-    if (elementRef.current) {
+    if (elementRef.current)
       html2canvas(elementRef.current).then((canvas) => {
         const link = document.createElement("a");
         link.download = `${fileName}.png`;
         link.href = canvas.toDataURL("image/png");
         link.click();
       });
-    }
   };
 
   return (

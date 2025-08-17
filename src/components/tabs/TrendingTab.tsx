@@ -16,9 +16,7 @@ export const TrendingTab = () => {
   const tracks = useAtomValue(tracksAtom);
   const [trendingType, setTrendingType] = useState<"artist" | "album">("artist");
 
-  const trendingData = useMemo(() => {
-    return getTrendingData(tracks, trendingType);
-  }, [tracks, trendingType]);
+  const trendingData = useMemo(() => getTrendingData(tracks, trendingType), [tracks, trendingType]);
 
   return (
     <div>

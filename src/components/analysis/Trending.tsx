@@ -32,9 +32,7 @@ export const Trending = ({ data }: Props) => {
 
   const chartData = data.labels.map((label, index) => {
     const entry: { [key: string]: string | number } = { name: label };
-    data.datasets.forEach((dataset) => {
-      entry[dataset.label] = dataset.data[index];
-    });
+    data.datasets.forEach((dataset) => (entry[dataset.label] = dataset.data[index]));
     return entry;
   });
 

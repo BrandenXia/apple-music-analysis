@@ -15,14 +15,13 @@ export const filterTracks = (
 ): Track[] => {
   let filteredTracks = tracks;
 
-  if (startDate && endDate) {
+  if (startDate && endDate)
     filteredTracks = tracks.filter((track) => {
       const dateAdded = new Date(track["Date Added"]);
       return dateAdded >= new Date(startDate) && dateAdded <= new Date(endDate);
     });
-  }
 
-  if (filter.type && filter.value) {
+  if (filter.type && filter.value)
     filteredTracks = filteredTracks.filter((track) => {
       if (filter.type === "genre") {
         const genreSource = track[genreKey] || (genreKey === "Grouping" ? track.Genre : undefined);
@@ -36,7 +35,6 @@ export const filterTracks = (
       }
       return true;
     });
-  }
 
   if (searchTerm) {
     const fuse = new Fuse(filteredTracks, {

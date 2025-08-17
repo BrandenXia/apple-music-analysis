@@ -17,13 +17,7 @@ import { ManageLibraries } from "./settings/ManageLibraries";
 export const SettingsDialog = () => {
   const [activeSection, setActiveSection] = useState("manage-libraries");
 
-  const sections = [
-    {
-      id: "manage-libraries",
-      label: "Manage Libraries",
-      icon: Library,
-    },
-  ];
+  const sections = [{ id: "manage-libraries", label: "Manage Libraries", icon: Library }];
 
   return (
     <Dialog>
