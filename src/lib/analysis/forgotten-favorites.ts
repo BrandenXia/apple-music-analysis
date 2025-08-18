@@ -1,8 +1,10 @@
+import { FORGOTTEN_FAVORITES_MONTHS } from "@/lib/constants/analysis";
+
 import type { TopTrack, Track } from "@/types";
 
 export const getForgottenFavorites = (tracks: Track[], count: number): TopTrack[] => {
   const sixMonthsAgo = new Date();
-  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - FORGOTTEN_FAVORITES_MONTHS);
 
   return tracks
     .filter((track) => {

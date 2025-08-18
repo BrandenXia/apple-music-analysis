@@ -1,3 +1,13 @@
+import {
+  MUSIC_TASTE_PROFILE_DIVERSITY_UNIQUE_ARTISTS,
+  MUSIC_TASTE_PROFILE_OLDEST_NEWEST_COUNT,
+  MUSIC_TASTE_PROFILE_SCORE_MULTIPLIER,
+  MUSIC_TASTE_PROFILE_SPECIALIST_RATIO_THRESHOLD,
+  MUSIC_TASTE_PROFILE_TIME_TRAVELER_UNIQUE_DECADES,
+  MUSIC_TASTE_PROFILE_TOP_DECADE_ARTISTS_COUNT,
+  MUSIC_TASTE_PROFILE_TOP_GENRES_COUNT,
+} from "@/lib/constants/analysis";
+
 import { getMostPlayedGenres } from "./most-played-genres";
 import { getMostPlayedTracks } from "./most-played-tracks";
 
@@ -42,7 +52,7 @@ export const getMusicTasteProfile = (tracks: Track[]): Analysis["musicTasteProfi
     : null;
 
   // Top Genres
-  const topGenres = getMostPlayedGenres(tracks, 5);
+  const topGenres = getMostPlayedGenres(tracks, MUSIC_TASTE_PROFILE_TOP_GENRES_COUNT);
 
   // Oldest and Newest Favorites
   const tracksWithYear = tracks.filter((t) => t.Year);
@@ -50,8 +60,14 @@ export const getMusicTasteProfile = (tracks: Track[]): Analysis["musicTasteProfi
   const newestYear = Math.max(...tracksWithYear.map((t) => t.Year));
   const oldestTracks = tracksWithYear.filter((t) => t.Year === oldestYear);
   const newestTracks = tracksWithYear.filter((t) => t.Year === newestYear);
-  const oldestFavorite = getMostPlayedTracks(oldestTracks, 1)[0];
-  const newestFavorite = getMostPlayedTracks(newestTracks, 1)[0];
+  const oldestFavorite = getMostPlayedTracks(
+    oldestTracks,
+    MUSIC_TASTE_PROFILE_OLDEST_NEWEST_COUNT,
+  )[0];
+  const newestFavorite = getMostPlayedTracks(
+    newestTracks,
+    MUSIC_TASTE_PROFILE_OLDEST_NEWEST_COUNT,
+  )[0];
 
   // Listener Type
   const artistPlayCounts = Object.values(
@@ -65,13 +81,13 @@ export const getMusicTasteProfile = (tracks: Track[]): Analysis["musicTasteProfi
   );
   const top10ArtistsPlayCount = artistPlayCounts
     .sort((a, b) => b - a)
-    .slice(0, 10)
+    .slice(0, MUSIC_TASTE_PROFILE_TOP_DECADE_ARTISTS_COUNT)
     .reduce((acc, count) => acc + count, 0);
   const totalPlayCount = artistPlayCounts.reduce((acc, count) => acc + count, 0);
   const specialistRatio = totalPlayCount > 0 ? top10ArtistsPlayCount / totalPlayCount : 0;
 
   const listenerType =
-    specialistRatio > 0.5
+    specialistRatio > MUSIC_TASTE_PROFILE_SPECIALIST_RATIO_THRESHOLD
       ? {
           type: "Specialist" as const,
           description: "You're a Specialist! You love a few artists and listen to them a lot.",
@@ -84,7 +100,9 @@ export const getMusicTasteProfile = (tracks: Track[]): Analysis["musicTasteProfi
 
   // Diversity
   const uniqueArtists = new Set(tracks.map((t) => t.Artist));
-  const diversityScore = Math.min(uniqueArtists.size / 50, 1) * 100;
+  const diversityScore =
+    Math.min(uniqueArtists.size / MUSIC_TASTE_PROFILE_DIVERSITY_UNIQUE_ARTISTS, 1) *
+    MUSIC_TASTE_PROFILE_SCORE_MULTIPLIER;
   const diversity = {
     score: diversityScore,
     description: `You have listened to ${uniqueArtists.size} different artists.`,
@@ -94,7 +112,9 @@ export const getMusicTasteProfile = (tracks: Track[]): Analysis["musicTasteProfi
   const uniqueDecades = new Set(
     tracks.map((t) => (t.Year ? Math.floor(t.Year / 10) * 10 : null)).filter(Boolean),
   );
-  const timeTravelerScore = Math.min(uniqueDecades.size / 5, 1) * 100;
+  const timeTravelerScore =
+    Math.min(uniqueDecades.size / MUSIC_TASTE_PROFILE_TIME_TRAVELER_UNIQUE_DECADES, 1) *
+    MUSIC_TASTE_PROFILE_SCORE_MULTIPLIER;
   const timeTraveler = {
     score: timeTravelerScore,
     description: `You have listened to music from ${uniqueDecades.size} different decades.`,
