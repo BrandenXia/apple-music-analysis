@@ -1,3 +1,5 @@
+import { CHART_COLORS } from "@/lib/constants/colors";
+
 import type { Track } from "@/types";
 
 export const getTrendingData = (tracks: Track[], type: "artist" | "album") => {
@@ -43,17 +45,14 @@ export const getTrendingData = (tracks: Track[], type: "artist" | "album") => {
     (a, b) => new Date(a).getTime() - new Date(b).getTime(),
   );
 
-  const datasets = top5Names.map((name) => {
+  const datasets = top5Names.map((name, index) => {
     const data = labels.map((label) => monthlyAdds[label][name] || 0);
-    // Generate a random color for the line
-    const r = Math.floor(Math.random() * 255);
-    const g = Math.floor(Math.random() * 255);
-    const b = Math.floor(Math.random() * 255);
+    const color = CHART_COLORS[index % CHART_COLORS.length];
     return {
       label: name,
       data: data,
-      borderColor: `rgb(${r}, ${g}, ${b})`,
-      backgroundColor: `rgba(${r}, ${g}, ${b}, 0.5)`,
+      borderColor: color,
+      backgroundColor: `${color}80`,
     };
   });
 
