@@ -15,6 +15,7 @@ import { countAtom, sortByAtom, trendViewAtom } from "@/atoms";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 import { getMostPlayedTrends } from "@/lib/analysis/most-played-trends";
+import { CHART_COLORS } from "@/lib/constants/colors";
 import { db } from "@/lib/db";
 
 import type { MostPlayedSnapshot } from "@/lib/analysis/most-played-trends";
@@ -90,15 +91,6 @@ export const MostPlayedTrends = () => {
     return Object.keys(chartData[0]).filter((key) => key !== "date");
   }, [chartData]);
 
-  const getRandomColor = () => {
-    const letters = "0123456789ABCDEF";
-    let color = "#";
-    for (let i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  };
-
   return (
     <Card>
       <CardHeader>
@@ -127,13 +119,13 @@ export const MostPlayedTrends = () => {
                   }}
                 />
                 <Tooltip content={<ChartTooltipContent />} />
-                {trackNames.map((name) => (
+                {trackNames.map((name, index) => (
                   <Line
                     key={name}
                     type="monotone"
                     dataKey={name}
-                    stroke={getRandomColor()}
-                    fill={getRandomColor()}
+                    stroke={CHART_COLORS[index % CHART_COLORS.length]}
+                    fill={CHART_COLORS[index % CHART_COLORS.length]}
                   />
                 ))}
               </LineChart>
