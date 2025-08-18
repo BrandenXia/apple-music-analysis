@@ -13,8 +13,8 @@ This file tracks the features and improvements planned for the Apple Music Analy
 ## Refactoring
 
 - [x] **Consolidate `getMostPlayed` functions:** Refactor `getMostPlayedAlbums`, `getMostPlayedArtists`, and `getMostPlayedGenres` into a single, more generic function to reduce code duplication.
-- [ ] **Consolidate `getTop` functions:** Combine `getTopThreeArtists` and `getTopThreeGenres` into a single `getTopItems` function.
-- [ ] **Extract hardcoded values:** Remove hardcoded values (e.g., item counts, date cutoffs) and replace them with constants or function arguments.
+- [x] **Consolidate `getTop` functions:** Combine `getTopThreeArtists` and `getTopThreeGenres` into a single `getTopItems` function.
+- [x] **Extract hardcoded values:** Remove hardcoded values (e.g., item counts, date cutoffs) and replace them with constants or function arguments.
 - [ ] **Simplify `music-taste-profile`:** Break down the `getMusicTasteProfile` function into smaller, more manageable functions.
 - [ ] **Improve chart colors:** Replace random color generation in `getTrendingData` with a predefined color palette for better consistency and readability.
 
